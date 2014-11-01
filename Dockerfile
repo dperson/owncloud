@@ -19,11 +19,10 @@ RUN apt-get update && \
     tar -xf owncloud-${version}.tar.bz2 -C /var/www && \
     mkdir /var/www/owncloud/data && \
     rm owncloud-${version}.tar.bz2 /usr/bin/nginx.sh \
-                /etc/nginx/sites-enabled/default &&
-    ln -s ../sites-available/owncloud /etc/nginx/sites-enabled/
+                /etc/nginx/sites-enabled/default
 
 # Config files
-COPY owncloud /etc/nginx/sites-available/
+COPY owncloud /etc/nginx/sites-enabled/
 COPY owncloud.sh /usr/bin/
 COPY php.ini /etc/php5/fpm/
 
