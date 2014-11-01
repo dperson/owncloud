@@ -10,14 +10,14 @@ RUN apt-get update && \
     apt-get install -qqy --no-install-recommends curl php5 php5-cli php5-gd \
                 php5-pgsql php5-sqlite php5-mysqlnd php5-curl php5-intl \
                 php5-mcrypt php5-ldap php5-gmp php5-apcu php5-imagick php5-fpm \
-                php5-json smbclient && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* && \
-    curl -LOC- -s https://download.owncloud.org/community/owncloud-${version}.tar.bz2 && \
-    sha256sum owncloud-${version}.tar.bz2 | grep -q "$sha256sum" && \
-    tar -xf owncloud-${version}.tar.bz2 -C /var/www && \
-    mkdir /var/www/owncloud/data && \
-    rm owncloud-${version}.tar.bz2 /usr/bin/nginx.sh
+                php5-json smbclient
+RUN apt-get clean
+RUN rm -rf /var/lib/apt/lists/*
+RUN curl -LOC- -s https://download.owncloud.org/community/owncloud-${version}.tar.bz2
+RUN sha256sum owncloud-${version}.tar.bz2 | grep -q "$sha256sum"
+RUN tar -xf owncloud-${version}.tar.bz2 -C /var/www
+RUN mkdir /var/www/owncloud/data
+RUN rm owncloud-${version}.tar.bz2 /usr/bin/nginx.sh
 
 # Configure
 COPY owncloud /etc/nginx/sites-available/

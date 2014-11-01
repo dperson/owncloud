@@ -3,8 +3,9 @@ upstream php-handler {
     server unix:/var/run/php5-fpm.sock;
 }
 
+
 server {
-    listen 80;
+    listen 80 default_server;
 
     # Path to the root of your installation
     root /var/www/;
