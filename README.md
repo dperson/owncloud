@@ -1,4 +1,4 @@
-[![logo](http://owncloud.org/wp-content/themes/owncloudorgnew/assets/img/common/logo_owncloud.svg)](http://owncloud.org/)
+[![logo](https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/OwnCloud2-Logo.svg/595px-OwnCloud2-Logo.svg.png)](http://owncloud.org/)
 
 # ownCloud
 
