@@ -15,9 +15,29 @@ connected clients.
 
 # How to use this image
 
+This ownCloud container was built with Nginx. It defaults to SQLite for the DB,
+but you can choose PostgreSQL or MySQL, for more performance.
+
 ## Hosting a ownCloud instance on port 8000
 
     sudo docker run --name owncloud -p 8000:80 -d dperson/owncloud
+
+OR with a DB:
+
+    sudo docker run --name postgres -d postgres
+    sudo docker run --name owncloud --link postgresql:db -p 8000:80 -d \
+                dperson/owncloud
+
+AND/OR set the host name:
+
+    sudo docker run -h my.domain.com --name owncloud -p 8000:80 -d \
+                dperson/owncloud
+
+AND/OR set local storage:
+
+    sudo docker run --name owncloud -p 8000:80 \
+                -v /path/to/owncloud/directory:/var/www/owncloud/data -d \
+                dperson/owncloud
 
 ## Configuration
 
