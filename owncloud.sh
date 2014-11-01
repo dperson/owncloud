@@ -61,6 +61,7 @@ while getopts ":ht:" opt; do
 done
 shift $(( OPTIND - 1 ))
 
+rm -f /etc/nginx/sites-enabled/default
 chown -Rh www-data. /var/www/owncloud
 
 if [[ $# -ge 1 && -x $(which $1 2>&-) ]]; then
