@@ -18,6 +18,21 @@
 
 set -o nounset                              # Treat unset variables as an error
 
+### timezone: Set the timezone for the container
+# Arguments:
+#   timezone) for example EST5EDT
+# Return: the correct zoneinfo file will be symlinked into place
+timezone() {
+    local timezone="${1:-EST5EDT}"
+
+    [[ -e /usr/share/zoneinfo/$timezone ]] || {
+        echo "ERROR: invalid timezone specified" >&2
+        return
+    }
+
+    ln -sf /usr/share/zoneinfo/$timezone /etc/localtime
+}
+
 ### usage: Help
 # Arguments:
 #   none)
@@ -28,15 +43,18 @@ usage() {
     echo "Usage: ${0##*/} [-opt] [command]
 Options (fields in '[]' are optional, '<>' are required):
     -h          This help
+    -t \"\"       Configure timezone
+                possible arg: \"[timezone]\" - zoneinfo timezone for container
 
 The 'command' (if provided and valid) will be run instead of nginx
 " >&2
     exit $RC
 }
 
-while getopts ":h" opt; do
+while getopts ":ht:" opt; do
     case "$opt" in
         h) usage ;;
+        t) timezone "$OPTARG" ;;
         "?") echo "Unknown option: -$OPTARG"; usage 1 ;;
         ":") echo "No argument value for option: -$OPTARG"; usage 2 ;;
     esac
