@@ -28,7 +28,7 @@ OR with a DB:
     sudo docker run --name owncloud --link postgresql:db -p 8000:80 -d \
                 dperson/owncloud
 
-AND/OR set the host name:
+AND/OR set the host name (important for the WebDAV feature):
 
     sudo docker run -h my.domain.com --name owncloud -p 8000:80 -d \
                 dperson/owncloud
