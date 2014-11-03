@@ -61,7 +61,7 @@ while getopts ":ht:" opt; do
 done
 shift $(( OPTIND - 1 ))
 
-[[ "$TIMEZONE" ]] && timezone "$TIMEZONE"
+[[ "${TIMEZONE:-""}" ]] && timezone "$TIMEZONE"
 
 rm -f /etc/nginx/sites-enabled/default
 chown -Rh www-data. /var/www/owncloud
