@@ -61,7 +61,9 @@ Any of the commands can be run at creation with `docker run` or later with
 `docker exec owncloud.sh` (as of version 1.3 of docker).
 
     sudo docker run --name owncloud -d dperson/owncloud -t EST5EDT
+
 Will get you the same settings as
+
     sudo docker run --name owncloud -p 8000:80 -d dperson/owncloud
     sudo docker exec owncloud owncloud.sh -T EST5EDT ls -AlF /etc/localtime
     sudo docker start owncloud
