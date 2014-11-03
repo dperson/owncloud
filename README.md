@@ -30,7 +30,7 @@ OR with a DB:
 
 AND/OR set the host name (important for the WebDAV feature):
 
-    sudo docker run -h my.domain.com --name owncloud -p 8000:80 -d \
+    sudo docker run -h host.domain.com --name owncloud -p 8000:80 -d \
                 dperson/owncloud
 
 AND/OR set local storage:
@@ -51,11 +51,17 @@ AND/OR set local storage:
 
     The 'command' (if provided and valid) will be run instead of owncloud
 
+ENVIROMENT VARIABLES (only available with `docker run`)
+
+ * `TIMEZONE` - As above, set a zoneinfo timezone, IE `EST5EDT`
+
 ## Examples
 
 Any of the commands can be run at creation with `docker run` or later with
 `docker exec owncloud.sh` (as of version 1.3 of docker).
 
+    sudo docker run --name owncloud -d dperson/owncloud -t EST5EDT
+Will get you the same settings as
     sudo docker run --name owncloud -p 8000:80 -d dperson/owncloud
     sudo docker exec owncloud owncloud.sh -T EST5EDT ls -AlF /etc/localtime
     sudo docker start owncloud
