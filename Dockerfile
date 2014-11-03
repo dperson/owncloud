@@ -6,7 +6,8 @@ ENV version 7.0.2
 ENV sha256sum ea07124a1b9632aa5227240d655e4d84967fb6dd49e4a16d3207d6179d031a3a
 
 # Install php and ownCloud
-RUN apt-get update && \
+RUN export TERM=dumb && \
+    apt-get update -qq && \
     apt-get install -qqy --no-install-recommends curl php5 php5-cli php5-gd \
                 php5-pgsql php5-sqlite php5-mysqlnd php5-curl php5-intl \
                 php5-mcrypt php5-ldap php5-gmp php5-apcu php5-imagick php5-fpm \
