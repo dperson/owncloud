@@ -66,7 +66,7 @@ Will get you the same settings as
 
     sudo docker run --name owncloud -p 8000:80 -d dperson/owncloud
     sudo docker exec owncloud owncloud.sh -T EST5EDT ls -AlF /etc/localtime
-    sudo docker start owncloud
+    sudo docker restart owncloud
 
 # User Feedback
 
