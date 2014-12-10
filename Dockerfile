@@ -2,8 +2,8 @@ FROM dperson/nginx
 MAINTAINER David Personette <dperson@dperson.com>
 
 # ownCloud file info
-ENV version 7.0.3
-ENV sha256sum 08a8949079873e253c8c9b0e60d9ecc2ccac92740a497315a8dad2919116ac20
+ENV version 7.0.4
+ENV sha256sum 7179f8d775c57a73e7a246bf51a5adb3259065ab2e08ab09e301e6d97dc34f36
 
 # Install php and ownCloud
 RUN TERM=dumb apt-get update -qq && \
