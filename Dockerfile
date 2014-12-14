@@ -12,8 +12,8 @@ RUN TERM=dumb apt-get update -qq && \
                 php5-mcrypt php5-ldap php5-gmp php5-apcu php5-imagick php5-fpm \
                 php5-json smbclient && \
     TERM=dumb apt-get clean && \
-    url=https://download.owncloud.org/community/owncloud-${version}.tar.bz2 \
-                curl -LOC- -ks $url && \
+    curl -LOC- -ks \
+        https://download.owncloud.org/community/owncloud-${version}.tar.bz2 && \
     sha256sum owncloud-${version}.tar.bz2 | grep -q "$sha256sum" && \
     tar -xf owncloud-${version}.tar.bz2 -C /var/www && \
     mkdir /var/www/owncloud/data && \
