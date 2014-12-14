@@ -12,14 +12,13 @@ RUN TERM=dumb apt-get update -qq && \
                 php5-mcrypt php5-ldap php5-gmp php5-apcu php5-imagick php5-fpm \
                 php5-json smbclient && \
     TERM=dumb apt-get clean && \
-    rm -rf /var/lib/apt/lists/* && \
-    curl -LOC- -ks \
-                https://download.owncloud.org/community/owncloud-${version}.tar.bz2 && \
+    url=https://download.owncloud.org/community/owncloud-${version}.tar.bz2 \
+                curl -LOC- -ks $url \
     sha256sum owncloud-${version}.tar.bz2 | grep -q "$sha256sum" && \
     tar -xf owncloud-${version}.tar.bz2 -C /var/www && \
     mkdir /var/www/owncloud/data && \
-    rm owncloud-${version}.tar.bz2 /usr/bin/nginx.sh \
-                /etc/nginx/sites-enabled/default
+    rm -rf /var/lib/apt/lists/* /tmp/* owncloud-${version}.tar.bz2 \
+                /usr/bin/nginx.sh /etc/nginx/sites-enabled/default
 
 # Config files
 COPY owncloud /etc/nginx/sites-enabled/
