@@ -13,7 +13,7 @@ RUN TERM=dumb apt-get update -qq && \
                 php5-json smbclient && \
     TERM=dumb apt-get clean && \
     url=https://download.owncloud.org/community/owncloud-${version}.tar.bz2 \
-                curl -LOC- -ks $url \
+                curl -LOC- -ks $url && \
     sha256sum owncloud-${version}.tar.bz2 | grep -q "$sha256sum" && \
     tar -xf owncloud-${version}.tar.bz2 -C /var/www && \
     mkdir /var/www/owncloud/data && \
