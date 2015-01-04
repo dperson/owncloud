@@ -1,9 +1,8 @@
 FROM dperson/nginx
 MAINTAINER David Personette <dperson@dperson.com>
 
-ENV DEBIAN_FRONTEND noninteractive
-
 # ownCloud file info
+ENV DEBIAN_FRONTEND noninteractive
 ENV version 7.0.4
 ENV sha256sum 7179f8d775c57a73e7a246bf51a5adb3259065ab2e08ab09e301e6d97dc34f36
 
