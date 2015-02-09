@@ -3,8 +3,8 @@ MAINTAINER David Personette <dperson@dperson.com>
 
 # ownCloud file info
 ENV DEBIAN_FRONTEND noninteractive
-ENV version 7.0.4
-ENV sha256sum 7179f8d775c57a73e7a246bf51a5adb3259065ab2e08ab09e301e6d97dc34f36
+ENV version 8.0.0
+ENV sha256sum 0c62cb06fe4c3eb107bccc4302f2bb3b9f7e5373cf7c9dd307fea8e823e6342f
 
 # Install php and ownCloud
 RUN apt-get update -qq && \
