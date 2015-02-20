@@ -34,7 +34,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
                 /etc/lighttpd/conf-available/15-fastcgi-php.conf || { \
         sed -i '/idle-timeout/a \ \t\t"allow-x-send-file" => "enable",' \
                     /etc/lighttpd/conf-available/15-fastcgi-php.conf && \
-        sed -i '/FCGI_MAX_REQUESTS/a \ \t\t\t"MOD_X_SENDFILE2_ENABLED" => "1",'\
+        sed -i '/"bin-environment"/a \ \t\t\t"MOD_X_SENDFILE2_ENABLED" => "1",'\
                     /etc/lighttpd/conf-available/15-fastcgi-php.conf; } && \
     lighttpd-enable-mod cgi && \
     lighttpd-enable-mod fastcgi && \
