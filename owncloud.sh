@@ -64,8 +64,10 @@ find /var/www/owncloud -type d -print0 | xargs -0 chmod 0750
 chown -Rh root:www-data /var/www/owncloud
 chown -Rh www-data:www-data /var/www/owncloud/apps /var/www/owncloud/config \
             /var/www/owncloud/data
-chown root:www-data /var/www/owncloud/.htaccess /var/www/owncloud/data/.htaccess
-chmod 0644 /var/www/owncloud/.htaccess /var/www/owncloud/data/.htaccess
+chown root:www-data /var/www/owncloud/.htaccess \
+            /var/www/owncloud/data/.htaccess 2>/dev/null
+chmod 0644 /var/www/owncloud/.htaccess /var/www/owncloud/data/.htaccess \
+            2>/dev/null
 
 if [[ $# -ge 1 && -x $(which $1 2>&-) ]]; then
     exec "$@"

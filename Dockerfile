@@ -16,15 +16,12 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     sha256sum owncloud-${version}.tar.bz2 | grep -q "$sha256sum" && \
     tar -xf owncloud-${version}.tar.bz2 -C /var/www owncloud && \
     mkdir -p /var/www/owncloud/data && \
-    echo -e '$HTTP["url"] =~ "^/owncloud/data/" {' \
-                >>/etc/lighttpd/lighttpd.conf && \
-    echo -e '\turl.access-deny = ("")'  >>/etc/lighttpd/lighttpd.conf && \
-    echo -e '}' >>/etc/lighttpd/lighttpd.conf && \
-    echo -e '$HTTP["url"] =~ "^/owncloud($|/)" {' \
-                >>/etc/lighttpd/lighttpd.conf && \
-    echo -e '\tdir-listing.activate = "disable"' \
-                >>/etc/lighttpd/lighttpd.conf && \
-    echo -e '}' >>/etc/lighttpd/lighttpd.conf && \
+    echo '$HTTP["url"] =~ "^/owncloud/data/" {' >>/etc/lighttpd/lighttpd.conf&&\
+    echo '\turl.access-deny = ("")'  >>/etc/lighttpd/lighttpd.conf && \
+    echo '}' >>/etc/lighttpd/lighttpd.conf && \
+    echo '$HTTP["url"] =~ "^/owncloud($|/)" {' >>/etc/lighttpd/lighttpd.conf &&\
+    echo '\tdir-listing.activate = "disable"' >>/etc/lighttpd/lighttpd.conf && \
+    echo '}' >>/etc/lighttpd/lighttpd.conf && \
     sed -i '/CHILDREN/s/[0-9][0-9]*/16/' \
                 /etc/lighttpd/conf-available/15-fastcgi-php.conf && \
     sed -i '/max-procs/a \ \t\t"idle-timeout" => 20,'\
@@ -35,7 +32,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
 # Config files
 COPY owncloud.sh /usr/bin/
 
-VOLUME ["/var/www/owncloud/data"]
+VOLUME ["/var/www/owncloud"]
 
 EXPOSE 80
 
