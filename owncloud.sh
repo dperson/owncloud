@@ -42,7 +42,7 @@ Options (fields in '[]' are optional, '<>' are required):
     -t \"\"       Configure timezone
                 possible arg: \"[timezone]\" - zoneinfo timezone for container
 
-The 'command' (if provided and valid) will be run instead of nginx
+The 'command' (if provided and valid) will be run instead of ownCloud
 " >&2
     exit $RC
 }
@@ -59,8 +59,13 @@ shift $(( OPTIND - 1 ))
 
 [[ "${TIMEZONE:-""}" ]] && timezone "$TIMEZONE"
 
-rm -f /etc/nginx/sites-enabled/default
-chown -Rh www-data. /var/www/owncloud
+find /var/www/owncloud -type f -print0 | xargs -0 chmod 0640
+find /var/www/owncloud -type d -print0 | xargs -0 chmod 0750
+chown -Rh root:www-data /var/www/owncloud
+chown -Rh www-data:www-data /var/www/owncloud/apps /var/www/owncloud/config \
+            /var/www/owncloud/data
+chown root:www-data /var/www/owncloud/.htaccess /var/www/owncloud/data/.htaccess
+chmod 0644 /var/www/owncloud/.htaccess /var/www/owncloud/data/.htaccess
 
 if [[ $# -ge 1 && -x $(which $1 2>&-) ]]; then
     exec "$@"
@@ -68,6 +73,5 @@ elif [[ $# -ge 1 ]]; then
     echo "ERROR: command not found: $1"
     exit 13
 else
-    service php5-fpm start
-    exec nginx -g "daemon off;"
+    exec lighttpd -D -f /etc/lighttpd/lighttpd.conf
 fi
