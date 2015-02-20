@@ -1,14 +1,12 @@
 FROM debian:jessie
 MAINTAINER David Personette <dperson@dperson.com>
 
-# ownCloud file info
-ENV DEBIAN_FRONTEND noninteractive
-ENV version 8.0.0
-ENV sha256sum 0c62cb06fe4c3eb107bccc4302f2bb3b9f7e5373cf7c9dd307fea8e823e6342f
-
 # Install php and ownCloud
-RUN apt-get update -qq && \
-    apt-get install -qqy --no-install-recommends curl php5 php5-cli php5-gd \
+RUN export DEBIAN_FRONTEND='noninteractive' && \
+    export version='8.0.0' && \
+    export sha256sum='0c62cb06fe4c3eb107bccc4302f2bb3b9f7e5373cf7c9dd307fe' && \
+    apt-get update -qq && \
+    apt-get install -qqy --no-install-recommends bzip2 curl php5 php5-gd \
                 php5-pgsql php5-sqlite php5-mysqlnd php5-curl php5-intl \
                 php5-mcrypt php5-ldap php5-gmp php5-apcu php5-imagick \
                 php5-cgi php5-json smbclient lighttpd && \
