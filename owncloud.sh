@@ -59,13 +59,13 @@ shift $(( OPTIND - 1 ))
 
 [[ "${TIMEZONE:-""}" ]] && timezone "$TIMEZONE"
 
+mkdir -p /var/run/lighttpd
 find /var/www/owncloud -type f -print0 | xargs -0 chmod 0640
 find /var/www/owncloud -type d -print0 | xargs -0 chmod 0750
 chown -Rh root:www-data /var/www/owncloud
-chown -Rh www-data:www-data /var/www/owncloud/apps /var/www/owncloud/config \
-            /var/www/owncloud/data
-chown root:www-data /var/www/owncloud/.htaccess \
-            /var/www/owncloud/data/.htaccess 2>/dev/null
+chown -Rh www-data. /var/run/lighttpd /var/www/owncloud/apps \
+            /var/www/owncloud/config /var/www/owncloud/data
+chown root:www-data /var/www/owncloud/data/.htaccess 2>/dev/null
 chmod 0644 /var/www/owncloud/.htaccess /var/www/owncloud/data/.htaccess \
             2>/dev/null
 
