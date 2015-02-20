@@ -16,17 +16,27 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     sha256sum owncloud-${version}.tar.bz2 | grep -q "$sha256sum" && \
     tar -xf owncloud-${version}.tar.bz2 -C /var/www owncloud && \
     mkdir -p /var/www/owncloud/data && \
-    echo '$HTTP["url"] =~ "^/owncloud/data/" {' >>/etc/lighttpd/lighttpd.conf&&\
+    sed -i '/server.document-root/s|/html||' \
+                /etc/lighttpd/lighttpd.conf && \
+    echo '\n$HTTP["url"] =~ "^/owncloud/data/" {' \
+                >>/etc/lighttpd/lighttpd.conf && \
     echo '\turl.access-deny = ("")'  >>/etc/lighttpd/lighttpd.conf && \
     echo '}' >>/etc/lighttpd/lighttpd.conf && \
-    echo '$HTTP["url"] =~ "^/owncloud($|/)" {' >>/etc/lighttpd/lighttpd.conf &&\
+    echo '\n$HTTP["url"] =~ "^/owncloud($|/)" {' \
+                >>/etc/lighttpd/lighttpd.conf && \
     echo '\tdir-listing.activate = "disable"' >>/etc/lighttpd/lighttpd.conf && \
     echo '}' >>/etc/lighttpd/lighttpd.conf && \
     sed -i '/CHILDREN/s/[0-9][0-9]*/16/' \
                 /etc/lighttpd/conf-available/15-fastcgi-php.conf && \
     sed -i '/max-procs/a \ \t\t"idle-timeout" => 20,'\
                 /etc/lighttpd/conf-available/15-fastcgi-php.conf && \
+    lighttpd-enable-mod cgi && \
+    lighttpd-enable-mod fastcgi && \
     lighttpd-enable-mod fastcgi-php && \
+    sed -i '/^output_buffering/s/4096/16384/' /etc/php5/cgi/php.ini && \
+    sed -i '/^expose_php/s/Off/On/' /etc/php5/cgi/php.ini && \
+    sed -i '/^post_max_size/s/8M/16G/' /etc/php5/cgi/php.ini && \
+    sed -i '/^upload_max_filesize/s/2M/16G/' /etc/php5/cgi/php.ini && \
     rm -rf /var/lib/apt/lists/* /tmp/* owncloud-${version}.tar.bz2
 
 # Config files
