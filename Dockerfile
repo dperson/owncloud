@@ -30,13 +30,21 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
                 /etc/lighttpd/conf-available/15-fastcgi-php.conf && \
     sed -i '/max-procs/a \ \t\t"idle-timeout" => 20,'\
                 /etc/lighttpd/conf-available/15-fastcgi-php.conf && \
+    grep -q 'allow-x-send-file' \
+                /etc/lighttpd/conf-available/15-fastcgi-php.conf || { \
+        sed -i '/idle-timeout/a \ \t\t"allow-x-send-file" => "enable",' \
+                    /etc/lighttpd/conf-available/15-fastcgi-php.conf && \
+        sed -i '/FCGI_MAX_REQUESTS/a \ \t\t\t"MOD_X_SENDFILE2_ENABLED" => "1",'\
+                    /etc/lighttpd/conf-available/15-fastcgi-php.conf; } && \
     lighttpd-enable-mod cgi && \
     lighttpd-enable-mod fastcgi && \
     lighttpd-enable-mod fastcgi-php && \
-    sed -i '/^output_buffering/s/4096/16384/' /etc/php5/cgi/php.ini && \
+    sed -i '/^output_buffering/s/4096/0/' /etc/php5/cgi/php.ini && \
     sed -i '/^expose_php/s/Off/On/' /etc/php5/cgi/php.ini && \
     sed -i '/^post_max_size/s/8M/16G/' /etc/php5/cgi/php.ini && \
     sed -i '/^upload_max_filesize/s/2M/16G/' /etc/php5/cgi/php.ini && \
+    sed -i '/^max_execution_time/s/[0-9][0-9]*/3600/' /etc/php5/cgi/php.ini && \
+    sed -i '/^max_input_time/s/[0-9][0-9]*/3600/' /etc/php5/cgi/php.ini && \
     rm -rf /var/lib/apt/lists/* /tmp/* owncloud-${version}.tar.bz2
 
 # Config files
