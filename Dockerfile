@@ -16,8 +16,11 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     sha256sum owncloud-${version}.tar.bz2 | grep -q "$sha256sum" && \
     tar -xf owncloud-${version}.tar.bz2 -C /var/www owncloud && \
     mkdir -p /var/www/owncloud/data && \
-    sed -i '/server.document-root/s|/html||' \
+    sed -i '/server.errorlog/i server.accesslog            = "/dev/stdout"' \
                 /etc/lighttpd/lighttpd.conf && \
+    sed -i '/server.errorlog/s|".*"|"/dev/stderr"|' \
+                /etc/lighttpd/lighttpd.conf && \
+    sed -i '/server.document-root/s|/html||' /etc/lighttpd/lighttpd.conf && \
     echo '\n$HTTP["url"] =~ "^/owncloud/data/" {' \
                 >>/etc/lighttpd/lighttpd.conf && \
     echo '\turl.access-deny = ("")'  >>/etc/lighttpd/lighttpd.conf && \
