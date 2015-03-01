@@ -18,7 +18,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     mkdir -p /var/www/owncloud/data && \
     sed -i '/server.errorlog/i server.accesslog            = "/dev/stdout"' \
                 /etc/lighttpd/lighttpd.conf && \
-    sed -i '/server.errorlog/s|".*"|"/dev/stderr"|' \
+    sed -i '/server.errorlog/s|".*"|"/dev/stdout"|' \
                 /etc/lighttpd/lighttpd.conf && \
     sed -i '/server.document-root/s|/html||' /etc/lighttpd/lighttpd.conf && \
     echo '\n$HTTP["url"] =~ "^/owncloud/data/" {' \
