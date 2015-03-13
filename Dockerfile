@@ -3,8 +3,8 @@ MAINTAINER David Personette <dperson@dperson.com>
 
 # Install php and ownCloud
 RUN export DEBIAN_FRONTEND='noninteractive' && \
-    export version='8.0.0' && \
-    export sha256sum='0c62cb06fe4c3eb107bccc4302f2bb3b9f7e5373cf7c9dd307fe' && \
+    export version='8.0.2' && \
+    export sha256sum='46c73b6ae3841e856d139537d21e1c7029c64d79fd7c45c794e2' && \
     apt-get update -qq && \
     apt-get install -qqy --no-install-recommends bzip2 curl php5 php5-gd \
                 php5-pgsql php5-sqlite php5-mysqlnd php5-curl php5-intl \
