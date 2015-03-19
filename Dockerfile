@@ -27,6 +27,8 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
                 >>/etc/lighttpd/lighttpd.conf && \
     echo '\tdir-listing.activate = "disable"' >>/etc/lighttpd/lighttpd.conf && \
     echo '}' >>/etc/lighttpd/lighttpd.conf && \
+    sed -i 's|/var/log/lighttpd/access.log|/dev/stdout|' \
+                /etc/lighttpd/conf-available/10-accesslog.conf && \
     sed -i '/^#cgi\.assign/,$s/^#//; /"\.pl"/i \ \t".cgi"  => "/usr/bin/perl",'\
                 /etc/lighttpd/conf-available/10-cgi.conf && \
     sed -i -e '/CHILDREN/s/[0-9][0-9]*/16/' \
@@ -38,6 +40,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
                     /etc/lighttpd/conf-available/15-fastcgi-php.conf && \
         sed -i '/"bin-environment"/a \ \t\t\t"MOD_X_SENDFILE2_ENABLED" => "1",'\
                     /etc/lighttpd/conf-available/15-fastcgi-php.conf; } && \
+    lighttpd-enable-mod accesslog && \
     lighttpd-enable-mod fastcgi-php && \
     sed -i '/^output_buffering/s/4096/0/' /etc/php5/cgi/php.ini && \
     sed -i '/^expose_php/s/Off/On/' /etc/php5/cgi/php.ini && \
@@ -46,8 +49,6 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     sed -i '/^max_execution_time/s/[0-9][0-9]*/3600/' /etc/php5/cgi/php.ini && \
     sed -i '/^max_input_time/s/[0-9][0-9]*/3600/' /etc/php5/cgi/php.ini && \
     rm -rf /var/lib/apt/lists/* /tmp/* owncloud-${version}.tar.bz2
-    #sed -i '/server.errorlog/i server.accesslog            = "/dev/stdout"' \
-    #            /etc/lighttpd/lighttpd.conf && \
 COPY owncloud.sh /usr/bin/
 
 VOLUME ["/var/www/owncloud/apps", "/var/www/owncloud/config", \
