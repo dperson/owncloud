@@ -40,7 +40,8 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
                     /etc/lighttpd/conf-available/15-fastcgi-php.conf && \
         sed -i '/"bin-environment"/a \ \t\t\t"MOD_X_SENDFILE2_ENABLED" => "1",'\
                     /etc/lighttpd/conf-available/15-fastcgi-php.conf; } && \
-    lighttpd-enable-mod fastcgi-php && \
+    lighttpd-enable-mod accesslog && \
+    lighttpd-enable-mod fastcgi && \
     sed -i '/^output_buffering/s/4096/0/' /etc/php5/cgi/php.ini && \
     sed -i '/^expose_php/s/Off/On/' /etc/php5/cgi/php.ini && \
     sed -i '/^post_max_size/s/8M/16G/' /etc/php5/cgi/php.ini && \
