@@ -26,8 +26,6 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
                 >>/etc/lighttpd/lighttpd.conf && \
     echo '\tdir-listing.activate = "disable"' >>/etc/lighttpd/lighttpd.conf && \
     echo '}' >>/etc/lighttpd/lighttpd.conf && \
-    sed -i '/accesslog.filename/s|^|#|' \
-                /etc/lighttpd/conf-available/10-accesslog.conf && \
     sed -i '/^#cgi\.assign/,$s/^#//; /"\.pl"/i \ \t".cgi"  => "/usr/bin/perl",'\
                 /etc/lighttpd/conf-available/10-cgi.conf && \
     sed -i -e '/CHILDREN/s/[0-9][0-9]*/16/' \
@@ -39,7 +37,6 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
                     /etc/lighttpd/conf-available/15-fastcgi-php.conf && \
         sed -i '/"bin-environment"/a \ \t\t\t"MOD_X_SENDFILE2_ENABLED" => "1",'\
                     /etc/lighttpd/conf-available/15-fastcgi-php.conf; } && \
-    lighttpd-enable-mod accesslog && \
     lighttpd-enable-mod fastcgi-php && \
     for i in /etc/php5/*/php.ini; do \
         sed -i '/always_populate_raw_post_data/s/^;//' $i; \
