@@ -9,7 +9,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     apt-get install -qqy --no-install-recommends bzip2 curl php5 php5-gd \
                 php5-pgsql php5-sqlite php5-mysqlnd php5-curl php5-intl \
                 php5-mcrypt php5-ldap php5-gmp php5-apcu php5-imagick \
-                php5-cgi php5-json smbclient lighttpd && \
+                php5-cgi php5-json smbclient lighttpd openssl && \
     apt-get clean && \
     curl -LOC- -ks \
         https://download.owncloud.org/community/owncloud-${version}.tar.bz2 && \
@@ -42,12 +42,15 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
                     /etc/lighttpd/conf-available/15-fastcgi-php.conf; } && \
     lighttpd-enable-mod accesslog && \
     lighttpd-enable-mod fastcgi-php && \
-    sed -i '/^output_buffering/s/4096/0/' /etc/php5/cgi/php.ini && \
-    sed -i '/^expose_php/s/Off/On/' /etc/php5/cgi/php.ini && \
-    sed -i '/^post_max_size/s/8M/16G/' /etc/php5/cgi/php.ini && \
-    sed -i '/^upload_max_filesize/s/2M/16G/' /etc/php5/cgi/php.ini && \
-    sed -i '/^max_execution_time/s/[0-9][0-9]*/3600/' /etc/php5/cgi/php.ini && \
-    sed -i '/^max_input_time/s/[0-9][0-9]*/3600/' /etc/php5/cgi/php.ini && \
+    for i in /etc/php5/*/php.ini; do \
+        sed -i '/always_populate_raw_post_data/s/^;//' $i; \
+        sed -i '/^output_buffering/s/4096/0/' $i; \
+        sed -i '/^expose_php/s/Off/On/' $i; \
+        sed -i '/^post_max_size/s/8M/16G/' $i; \
+        sed -i '/^upload_max_filesize/s/2M/16G/' $i; \
+        sed -i '/^max_execution_time/s/[0-9][0-9]*/3600/' $i; \
+        sed -i '/^max_input_time/s/[0-9][0-9]*/3600/' $i; \
+    done && \
     rm -rf /var/lib/apt/lists/* /tmp/* owncloud-${version}.tar.bz2
 COPY owncloud.sh /usr/bin/
 
