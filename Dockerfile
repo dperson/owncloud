@@ -16,8 +16,6 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     sha256sum owncloud-${version}.tar.bz2 | grep -q "$sha256sum" && \
     tar -xf owncloud-${version}.tar.bz2 -C /var/www owncloud && \
     mkdir -p /var/www/owncloud/data && \
-    sed -i '/server.errorlog/i server.accesslog            = "/dev/stdout"' \
-                /etc/lighttpd/lighttpd.conf && \
     sed -i '/server.errorlog/s|".*"|"/dev/stdout"|' \
                 /etc/lighttpd/lighttpd.conf && \
     sed -i '/server.document-root/s|/html||' /etc/lighttpd/lighttpd.conf && \
@@ -40,7 +38,6 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
                     /etc/lighttpd/conf-available/15-fastcgi-php.conf && \
         sed -i '/"bin-environment"/a \ \t\t\t"MOD_X_SENDFILE2_ENABLED" => "1",'\
                     /etc/lighttpd/conf-available/15-fastcgi-php.conf; } && \
-    lighttpd-enable-mod accesslog && \
     lighttpd-enable-mod fastcgi-php && \
     sed -i '/^output_buffering/s/4096/0/' /etc/php5/cgi/php.ini && \
     sed -i '/^expose_php/s/Off/On/' /etc/php5/cgi/php.ini && \
@@ -49,8 +46,8 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     sed -i '/^max_execution_time/s/[0-9][0-9]*/3600/' /etc/php5/cgi/php.ini && \
     sed -i '/^max_input_time/s/[0-9][0-9]*/3600/' /etc/php5/cgi/php.ini && \
     rm -rf /var/lib/apt/lists/* /tmp/* owncloud-${version}.tar.bz2
-
-# Config files
+    #sed -i '/server.errorlog/i server.accesslog            = "/dev/stdout"' \
+    #            /etc/lighttpd/lighttpd.conf && \
 COPY owncloud.sh /usr/bin/
 
 VOLUME ["/var/www/owncloud/apps", "/var/www/owncloud/config", \
