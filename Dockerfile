@@ -9,7 +9,8 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     apt-get install -qqy --no-install-recommends bzip2 curl php5 php5-gd \
                 php5-pgsql php5-sqlite php5-mysqlnd php5-curl php5-intl \
                 php5-mcrypt php5-ldap php5-gmp php5-apcu php5-imagick \
-                php5-cgi php5-json smbclient lighttpd openssl && \
+                php5-cgi php5-json smbclient lighttpd openssl \
+                $(apt-get -s dist-upgrade|awk '/^Inst.*ecurity/ {print $2}') &&\
     apt-get clean && \
     curl -LOC- -ks \
         https://download.owncloud.org/community/owncloud-${version}.tar.bz2 && \
