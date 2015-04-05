@@ -11,7 +11,6 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
                 php5-mcrypt php5-ldap php5-gmp php5-apcu php5-imagick \
                 php5-cgi php5-json smbclient lighttpd openssl \
                 $(apt-get -s dist-upgrade|awk '/^Inst.*ecurity/ {print $2}') &&\
-    apt-get clean && \
     curl -LOC- -ks \
         https://download.owncloud.org/community/owncloud-${version}.tar.bz2 && \
     sha256sum owncloud-${version}.tar.bz2 | grep -q "$sha256sum" && \
@@ -48,6 +47,8 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
         sed -i '/^max_execution_time/s/[0-9][0-9]*/3600/' $i; \
         sed -i '/^max_input_time/s/[0-9][0-9]*/3600/' $i; \
     done && \
+    apt-get purge -qqy curl && \
+    apt-get autoremove -qqy && apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* owncloud-${version}.tar.bz2
 COPY owncloud.sh /usr/bin/
 
