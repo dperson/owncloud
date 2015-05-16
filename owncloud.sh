@@ -69,7 +69,9 @@ chown root:www-data /var/www/owncloud/data/.htaccess 2>/dev/null
 chmod 0644 /var/www/owncloud/.htaccess /var/www/owncloud/data/.htaccess \
             2>/dev/null
 
-if [[ $# -ge 1 && -x $(which $1 2>&-) ]]; then
+if ps -ef | grep -q lighttpd; then
+    echo "Service already running, please restart container to apply changes"
+elif [[ $# -ge 1 && -x $(which $1 2>&-) ]]; then
     exec "$@"
 elif [[ $# -ge 1 ]]; then
     echo "ERROR: command not found: $1"
