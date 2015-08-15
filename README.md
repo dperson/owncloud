@@ -46,26 +46,32 @@ AND/OR set local storage:
     Usage: owncloud.sh [-opt] [command]
     Options (fields in '[]' are optional, '<>' are required):
         -h          This help
-        -T ""       Configure timezone
+        -t ""       Configure timezone
                     possible arg: "[timezone]" - zoneinfo timezone for container
 
     The 'command' (if provided and valid) will be run instead of owncloud
 
 ENVIROMENT VARIABLES (only available with `docker run`)
 
- * `TIMEZONE` - As above, set a zoneinfo timezone, IE `EST5EDT`
+ * `TZ` - As above, set a zoneinfo timezone, IE `EST5EDT`
 
 ## Examples
 
 Any of the commands can be run at creation with `docker run` or later with
 `docker exec owncloud.sh` (as of version 1.3 of docker).
 
+### Setting the Timezone
+
     sudo docker run --name owncloud -d dperson/owncloud -t EST5EDT
+
+OR using `environment variables`
+
+    sudo docker run --name owncloud -e TZ=EST5EDT -d dperson/owncloud
 
 Will get you the same settings as
 
     sudo docker run --name owncloud -p 8000:80 -d dperson/owncloud
-    sudo docker exec owncloud owncloud.sh -T EST5EDT ls -AlF /etc/localtime
+    sudo docker exec owncloud owncloud.sh -t EST5EDT ls -AlF /etc/localtime
     sudo docker restart owncloud
 
 # User Feedback

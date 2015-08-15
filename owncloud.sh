@@ -24,11 +24,15 @@ set -o nounset                              # Treat unset variables as an error
 # Return: the correct zoneinfo file will be symlinked into place
 timezone() { local timezone="${1:-EST5EDT}"
     [[ -e /usr/share/zoneinfo/$timezone ]] || {
-        echo "ERROR: invalid timezone specified" >&2
+        echo "ERROR: invalid timezone specified: $timezone" >&2
         return
     }
 
-    ln -sf /usr/share/zoneinfo/$timezone /etc/localtime
+    if [[ $(cat /etc/timezone) != $timezone ]]; then
+        echo "$timezone" > /etc/timezone
+        ln -sf /usr/share/zoneinfo/$timezone /etc/localtime
+        dpkg-reconfigure -f noninteractive tzdata
+    fi
 }
 
 ### usage: Help
@@ -59,7 +63,7 @@ while getopts ":ht:" opt; do
 done
 shift $(( OPTIND - 1 ))
 
-[[ "${TIMEZONE:-""}" ]] && timezone "$TIMEZONE"
+[[ "${TZ:-""}" ]] && timezone "$TZ"
 
 chown -Rh www-data. /var/www/owncloud/apps /var/www/owncloud/config \
             /var/www/owncloud/data
