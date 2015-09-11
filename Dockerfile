@@ -49,23 +49,23 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
         sed -i '/^max_execution_time/s/[0-9][0-9]*/3600/' $i; \
         sed -i '/^max_input_time/s/[0-9][0-9]*/3600/' $i; \
     done && \
-    mkdir -p /var/run/lighttpd && \
+    mkdir -p /run/lighttpd && \
     find /var/www/owncloud -type f -print0 | xargs -0 chmod 0640 && \
     find /var/www/owncloud -type d -print0 | xargs -0 chmod 0750 && \
-    { chmod 0644 /var/www/owncloud/.htaccess /var/www/owncloud/data/.htaccess||\
-                :; } && \
-    chown -Rh root:www-data /var/www/owncloud && \
-    chown -Rh www-data. /var/www/owncloud/apps /var/www/owncloud/config \
-                /var/www/owncloud/data && \
-    { chown -Rh root:www-data /var/www/owncloud/data/.htaccess || :; } && \
-    chown -Rh www-data. /var/run/lighttpd && \
+    { chmod 0644 /var/www/owncloud/.htaccess \
+                /var/www/owncloud/data/.htaccess || :; } && \
+    { chown -Rh root:www-data /var/www/owncloud \
+                /var/www/owncloud/data/.htaccess || :; } && \
+    chown -Rh www-data. /run/lighttpd /var/www/owncloud/apps \
+                /var/www/owncloud/config /var/www/owncloud/data && \
     apt-get purge -qqy curl && \
     apt-get autoremove -qqy && apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* owncloud-${version}.tar.bz2
 COPY owncloud.sh /usr/bin/
 
-VOLUME ["/var/run/lighttpd", "/var/www/owncloud/apps", \
-            "/var/www/owncloud/config", "/var/www/owncloud/data"]
+VOLUME ["/run", "/tmp", "/var/cache", "/var/lib", "/var/log", "/var/tmp", \
+            "/var/www/owncloud/apps", "/var/www/owncloud/config", \
+            "/var/www/owncloud/data"]
 
 EXPOSE 80
 

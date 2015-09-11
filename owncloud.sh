@@ -64,11 +64,15 @@ done
 shift $(( OPTIND - 1 ))
 
 [[ "${TZ:-""}" ]] && timezone "$TZ"
+[[ "${USERID:-""}" =~ ^[0-9]+$ ]] && usermod -u $USERID www-data
+[[ "${GROUPID:-""}" =~ ^[0-9]+$ ]] && usermod -g $GROUPID www-data
 
-chown -Rh www-data. /var/www/owncloud/apps /var/www/owncloud/config \
-            /var/www/owncloud/data
-chown root:www-data /var/www/owncloud/data/.htaccess
 chmod 0644 /var/www/owncloud/data/.htaccess
+chown -Rh root:www-data /var/www/owncloud /var/www/owncloud/data/.htaccess \
+            2>&1 | grep -iv 'Read-only' || :
+chown -Rh www-data. /var/www/owncloud/apps /var/www/owncloud/config \
+            /var/www/owncloud/data /run/lighttpd /var/cache/lighttpd \
+            /var/log/lighttpd  2>&1 | grep -iv 'Read-only' || :
 
 if [[ $# -ge 1 && -x $(which $1 2>&-) ]]; then
     exec "$@"
