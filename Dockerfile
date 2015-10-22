@@ -18,6 +18,14 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     mkdir -p /var/www/owncloud/data && \
     sed -i '/server.errorlog/s|^|#|' /etc/lighttpd/lighttpd.conf && \
     sed -i '/server.document-root/s|/html||' /etc/lighttpd/lighttpd.conf && \
+    echo '\nsetenv.add-response-header = ( "X-XSS-Protection" => "1; mode=block" )' \
+                >>/etc/lighttpd/lighttpd.conf && \
+    echo 'setenv.add-response-header = ( "X-Content-Type-Options" => "nosniff" )' \
+                >>/etc/lighttpd/lighttpd.conf && \
+    echo 'setenv.add-response-header = ( "X-Robots-Tag" => "none" )' \
+                >>/etc/lighttpd/lighttpd.conf && \
+    echo 'setenv.add-response-header = ( "X-Frame-Options" => "SAMEORIGIN" )' \
+                >>/etc/lighttpd/lighttpd.conf && \
     echo '\n$HTTP["url"] =~ "^/owncloud/(?:\.htaccess|data|config|db_structure\.xml|README)" {' \
                 >>/etc/lighttpd/lighttpd.conf && \
     echo '\turl.access-deny = ("")'  >>/etc/lighttpd/lighttpd.conf && \
