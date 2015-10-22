@@ -67,12 +67,12 @@ shift $(( OPTIND - 1 ))
 [[ "${USERID:-""}" =~ ^[0-9]+$ ]] && usermod -u $USERID www-data
 [[ "${GROUPID:-""}" =~ ^[0-9]+$ ]] && usermod -g $GROUPID www-data
 
-chmod 0644 /var/www/owncloud/data/.htaccess
-chown -Rh root:www-data /var/www/owncloud /var/www/owncloud/data/.htaccess \
-            2>&1 | grep -iv 'Read-only' || :
-chown -Rh www-data. /var/www/owncloud/apps /var/www/owncloud/config \
-            /var/www/owncloud/data /run/lighttpd /var/cache/lighttpd \
-            /var/log/lighttpd  2>&1 | grep -iv 'Read-only' || :
+find /var/www/owncloud -type f -print0 | xargs -0 chmod 0640
+find /var/www/owncloud -type d -print0 | xargs -0 chmod 0750
+chown -Rh root:www-data /var/www/owncloud 2>&1 | grep -iv 'Read-only' || :
+chown -Rh www-data. /run/lighttpd /var/cache/lighttpd \
+            /var/www/owncloud/{apps,config,data,themes}
+chown -h root:www-data /var/www/owncloud/data/.htaccess 2>/dev/null || :
 
 if [[ $# -ge 1 && -x $(which $1 2>&-) ]]; then
     exec "$@"
