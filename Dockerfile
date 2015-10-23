@@ -18,8 +18,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     mkdir -p /var/www/owncloud/data && \
     sed -i '/server.errorlog/s|^|#|' /etc/lighttpd/lighttpd.conf && \
     sed -i '/server.document-root/s|/html||' /etc/lighttpd/lighttpd.conf && \
-    sed -i '/mod_rewrite/a \
-	"mod_setenv",' /etc/lighttpd/lighttpd.conf && \
+    sed -i '/mod_rewrite/a \ \t"mod_setenv",' /etc/lighttpd/lighttpd.conf && \
     echo '\nsetenv.add-response-header += ( "X-XSS-Protection" => "1; mode=block" )' \
                 >>/etc/lighttpd/lighttpd.conf && \
     echo 'setenv.add-response-header += ( "X-Content-Type-Options" => "nosniff" )' \
