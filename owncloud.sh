@@ -65,7 +65,7 @@ shift $(( OPTIND - 1 ))
 
 [[ "${TZ:-""}" ]] && timezone "$TZ"
 [[ "${USERID:-""}" =~ ^[0-9]+$ ]] && usermod -u $USERID www-data
-[[ "${GROUPID:-""}" =~ ^[0-9]+$ ]] && usermod -g $GROUPID www-data
+[[ "${GROUPID:-""}" =~ ^[0-9]+$ ]] && groupmod -g $GROUPID www-data
 
 find /var/www/owncloud -type f -print0 | xargs -0 chmod 0640
 find /var/www/owncloud -type d -print0 | xargs -0 chmod 0750
