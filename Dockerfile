@@ -6,12 +6,12 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     export version='8.2.1' && \
     export sha256sum='5390b2172562a5bf97a46e9a621d1dd92f9b74efaccbb77978c3' && \
     apt-get update -qq && \
-    apt-get install -qqy --no-install-recommends bzip2 curl php5 php5-gd \
-                php5-pgsql php5-sqlite php5-mysqlnd php5-curl php5-intl \
-                php5-mcrypt php5-ldap php5-gmp php5-apcu php5-imagick \
+    apt-get install -qqy --no-install-recommends bzip2 ca-certificates curl \
+                php5 php5-gd php5-pgsql php5-sqlite php5-mysqlnd php5-curl \
+                php5-intl php5-mcrypt php5-ldap php5-gmp php5-apcu php5-imagick\
                 php5-cgi php5-json smbclient lighttpd openssl \
                 $(apt-get -s dist-upgrade|awk '/^Inst.*ecurity/ {print $2}') &&\
-    curl -LOC- -ks \
+    curl -LOC- \
         https://download.owncloud.org/community/owncloud-${version}.tar.bz2 && \
     sha256sum owncloud-${version}.tar.bz2 | grep -q "$sha256sum" && \
     tar -xf owncloud-${version}.tar.bz2 -C /var/www owncloud && \
@@ -66,7 +66,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
                 /var/www/owncloud/config /var/www/owncloud/data \
                 /var/www/owncloud/themes && \
     { chown -Rh root:www-data /var/www/owncloud/data/.htaccess || :; } && \
-    apt-get purge -qqy curl && \
+    apt-get purge -qqy ca-certificates curl && \
     apt-get autoremove -qqy && apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* owncloud-${version}.tar.bz2
 COPY owncloud.sh /usr/bin/
