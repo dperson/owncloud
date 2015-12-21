@@ -11,7 +11,8 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
                 php5-intl php5-mcrypt php5-ldap php5-gmp php5-apcu php5-imagick\
                 php5-cgi php5-json smbclient lighttpd openssl \
                 $(apt-get -s dist-upgrade|awk '/^Inst.*ecurity/ {print $2}') &&\
-    curl -LOC- \
+    echo "downloading owncloud-${version}.tar.bz2 ..." && \
+    curl -LOC- -s \
         https://download.owncloud.org/community/owncloud-${version}.tar.bz2 && \
     sha256sum owncloud-${version}.tar.bz2 | grep -q "$sha256sum" && \
     tar -xf owncloud-${version}.tar.bz2 -C /var/www owncloud && \
