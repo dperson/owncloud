@@ -3,13 +3,18 @@ MAINTAINER David Personette <dperson@dperson.com>
 
 # Install php and ownCloud
 RUN export DEBIAN_FRONTEND='noninteractive' && \
-    export version='8.2.1' && \
-    export sha256sum='5390b2172562a5bf97a46e9a621d1dd92f9b74efaccbb77978c3' && \
+    export version='8.2.2' && \
+    export sha256sum='d5b935f904744b8b40b310f19679702387c852498d0dc7aaeda4' && \
     apt-get update -qq && \
-    apt-get install -qqy --no-install-recommends bzip2 ca-certificates curl \
-                php5 php5-gd php5-pgsql php5-sqlite php5-mysqlnd php5-curl \
-                php5-intl php5-mcrypt php5-ldap php5-gmp php5-apcu php5-imagick\
-                php5-cgi php5-json smbclient lighttpd openssl \
+    apt-get install -qqy --no-install-recommends ca-certificates curl && \
+    echo "deb http://packages.dotdeb.org jessie all" \
+                >>/etc/apt/sources.list.d/dotdeb.list && \
+    curl -Ls https://www.dotdeb.org/dotdeb.gpg | apt-key add - && \
+    apt-get update -qq && \
+    apt-get install -qqy --no-install-recommends bzip2 lighttpd openssl \
+                php7.0-gd php7.0-pgsql php7.0-sqlite3 php7.0-mysql php7.0-curl \
+                php7.0-intl php7.0-mcrypt php7.0-ldap php7.0-gmp php7.0-opcache\
+                php7.0 php7.0-cgi php7.0-json smbclient \
                 $(apt-get -s dist-upgrade|awk '/^Inst.*ecurity/ {print $2}') &&\
     echo "downloading owncloud-${version}.tar.bz2 ..." && \
     curl -LOC- -s \
@@ -50,7 +55,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
         sed -i '/"bin-environment"/a \ \t\t\t"MOD_X_SENDFILE2_ENABLED" => "1",'\
                     /etc/lighttpd/conf-available/15-fastcgi-php.conf; } && \
     lighttpd-enable-mod fastcgi-php && \
-    for i in /etc/php5/*/php.ini; do \
+    for i in /etc/php*/*/php.ini; do \
         sed -i '/always_populate_raw_post_data/s/^;//' $i; \
         sed -i '/^output_buffering/s/4096/0/' $i; \
         sed -i '/^expose_php/s/Off/On/' $i; \
