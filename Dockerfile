@@ -12,9 +12,9 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     curl -Ls https://www.dotdeb.org/dotdeb.gpg | apt-key add - && \
     apt-get update -qq && \
     apt-get install -qqy --no-install-recommends bzip2 lighttpd openssl \
-                php7.0-gd php7.0-pgsql php7.0-sqlite3 php7.0-mysql php7.0-curl \
+                php7.0-gd php7.0-mysql php7.0-pgsql php7.0-sqlite3 php7.0-curl \
                 php7.0-intl php7.0-mcrypt php7.0-ldap php7.0-gmp php7.0-opcache\
-                php7.0 php7.0-cgi php7.0-json smbclient \
+                php7.0 php7.0-cgi php7.0-json php7.0-imap smbclient \
                 $(apt-get -s dist-upgrade|awk '/^Inst.*ecurity/ {print $2}') &&\
     echo "downloading owncloud-${version}.tar.bz2 ..." && \
     curl -LOC- -s \
@@ -55,8 +55,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
         sed -i '/"bin-environment"/a \ \t\t\t"MOD_X_SENDFILE2_ENABLED" => "1",'\
                     /etc/lighttpd/conf-available/15-fastcgi-php.conf; } && \
     lighttpd-enable-mod fastcgi-php && \
-    for i in /etc/php*/*/php.ini; do \
-        sed -i '/always_populate_raw_post_data/s/^;//' $i; \
+    for i in /etc/php/7.0/*/php.ini; do \
         sed -i '/^output_buffering/s/4096/0/' $i; \
         sed -i '/^expose_php/s/Off/On/' $i; \
         sed -i '/^post_max_size/s/8M/16G/' $i; \
