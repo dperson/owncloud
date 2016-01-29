@@ -20,22 +20,22 @@ but you can choose PostgreSQL or MySQL, for more performance.
 
 ## Hosting a ownCloud instance on port 8000
 
-    sudo docker run --name owncloud -p 8000:80 -d dperson/owncloud
+    sudo docker run -it --name owncloud -p 8000:80 -d dperson/owncloud
 
 OR with a DB:
 
-    sudo docker run --name postgres -d postgres
-    sudo docker run --name owncloud --link postgresql:db -p 8000:80 -d \
+    sudo docker run -it --name postgres -d postgres
+    sudo docker run -it --name owncloud --link postgresql:db -p 8000:80 -d \
                 dperson/owncloud
 
 AND/OR set the host name (important for the WebDAV feature):
 
-    sudo docker run -h host.domain.com --name owncloud -p 8000:80 -d \
+    sudo docker run -it -h host.domain.com --name owncloud -p 8000:80 -d \
                 dperson/owncloud
 
 AND/OR set local storage:
 
-    sudo docker run --name owncloud -p 8000:80 \
+    sudo docker run -it --name owncloud -p 8000:80 \
                 -v /path/to/owncloud/directory:/var/www/owncloud/data -d \
                 dperson/owncloud
 
@@ -60,20 +60,20 @@ ENVIRONMENT VARIABLES (only available with `docker run`)
 ## Examples
 
 Any of the commands can be run at creation with `docker run` or later with
-`docker exec owncloud.sh` (as of version 1.3 of docker).
+`docker exec -it owncloud.sh` (as of version 1.3 of docker).
 
 ### Setting the Timezone
 
-    sudo docker run --name owncloud -d dperson/owncloud -t EST5EDT
+    sudo docker run -it --name owncloud -d dperson/owncloud -t EST5EDT
 
 OR using `environment variables`
 
-    sudo docker run --name owncloud -e TZ=EST5EDT -d dperson/owncloud
+    sudo docker run -it --name owncloud -e TZ=EST5EDT -d dperson/owncloud
 
 Will get you the same settings as
 
-    sudo docker run --name owncloud -p 8000:80 -d dperson/owncloud
-    sudo docker exec owncloud owncloud.sh -t EST5EDT ls -AlF /etc/localtime
+    sudo docker run -it --name owncloud -p 8000:80 -d dperson/owncloud
+    sudo docker exec -it owncloud owncloud.sh -t EST5EDT ls -AlF /etc/localtime
     sudo docker restart owncloud
 
 # User Feedback
