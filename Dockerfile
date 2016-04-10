@@ -3,8 +3,8 @@ MAINTAINER David Personette <dperson@dperson.com>
 
 # Install php and ownCloud
 RUN export DEBIAN_FRONTEND='noninteractive' && \
-    export version='9.0.0' && \
-    export sha256sum='d16737510a77a81489f7c4d5e19b0756fa2ea1c5081ba174b0fe' && \
+    export version='9.0.1' && \
+    export sha256sum='44c98ffa3b957faf3af884cafa1d88c05762b65452592768a926' && \
     apt-get update -qq && \
     apt-get install -qqy --no-install-recommends ca-certificates curl && \
     echo "deb http://packages.dotdeb.org jessie all" \
