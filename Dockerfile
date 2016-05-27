@@ -76,9 +76,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     rm -rf /var/lib/apt/lists/* /tmp/* owncloud-${version}.tar.bz2
 COPY owncloud.sh /usr/bin/
 
-VOLUME ["/var/cache/lighttpd", "/var/www/owncloud/3rdparty", "/var/www/owncloud/apps", \
-            "/var/www/owncloud/config", "/var/www/owncloud/data", \
-            "/var/www/owncloud/themes"]
+VOLUME ["/var/cache/lighttpd", "/var/www/owncloud"]
 
 EXPOSE 80
 
