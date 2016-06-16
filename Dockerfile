@@ -14,8 +14,8 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     apt-get install -qqy --no-install-recommends bzip2 openssl \
                 php7.0-apcu php7.0-fpm php7.0-gd php7.0-intl php7.0-mcrypt \
                 php7.0-mysql php7.0-opcache php7.0-pgsql php7.0-sqlite3 \
-                php7.0-curl php7.0-gmp php7.0-imap php7.0-json php7.0-ldap \
-                php7.0-redis php7.0-memcached smbclient \
+                php7.0-bz2 php7.0-curl php7.0-gmp php7.0-imagick php7.0-imap \
+                php7.0-json php7.0-ldap smbclient \
                 $(apt-get -s dist-upgrade|awk '/^Inst.*ecurity/ {print $2}') &&\
     echo "downloading owncloud-${version}.tar.bz2 ..." && \
     curl -LOC- -s \

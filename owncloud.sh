@@ -65,6 +65,11 @@ shift $(( OPTIND - 1 ))
 [[ "${USERID:-""}" =~ ^[0-9]+$ ]] && usermod -u $USERID -o www-data
 [[ "${GROUPID:-""}" =~ ^[0-9]+$ ]] && groupmod -g $GROUPID -o www-data
 
+[[ -f /var/www/owncloud/config/config.php ]] && {
+    grep -q APCu /var/www/owncloud/config/config.php ||
+        sed -i '/^);/i\  '"'memcache.local' => '\\\\OC\\\\Memcache\\\\APCu'," \
+                    /var/www/owncloud/config/config.php
+}
 find /var/www/owncloud -type f -print0 | xargs -0 chmod 0640
 find /var/www/owncloud -type d -print0 | xargs -0 chmod 0750
 mkdir -p /run/php
