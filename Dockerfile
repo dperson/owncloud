@@ -32,6 +32,13 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
         sed -i '/^max_execution_time/s/[0-9][0-9]*/3600/' $i; \
         sed -i '/^max_input_time/s/[0-9][0-9]*/3600/' $i; \
     done && \
+    { echo 'opcache.enable_cli=1'; \
+        echo 'opcache.fast_shutdown=1'; \
+        echo 'opcache.interned_strings_buffer=8'; \
+        echo 'opcache.max_accelerated_files=4000'; \
+        echo 'opcache.memory_consumption=128'; \
+        echo 'opcache.revalidate_freq=60'; } \
+                >>/etc/php/mods-available/opcache.ini && \
     find /var/www/owncloud -type f -print0 | xargs -0 chmod 0640 && \
     find /var/www/owncloud -type d -print0 | xargs -0 chmod 0750 && \
     { chown -Rh root:www-data /var/www/owncloud || :; } && \
@@ -41,13 +48,6 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     apt-get purge -qqy ca-certificates curl && \
     apt-get autoremove -qqy && apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* owncloud-${version}.tar.bz2
-    #{ echo 'opcache.enable_cli=1'; \
-    #    echo 'opcache.fast_shutdown=1'; \
-    #    echo 'opcache.interned_strings_buffer=8'; \
-    #    echo 'opcache.max_accelerated_files=4000'; \
-    #    echo 'opcache.memory_consumption=128'; \
-    #    echo 'opcache.revalidate_freq=60'; } \
-    #            >/etc/php/7.0/conf.d/opcache-recommended.ini && \
 COPY owncloud.sh /usr/bin/
 
 VOLUME ["/var/www/owncloud"]

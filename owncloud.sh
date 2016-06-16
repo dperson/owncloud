@@ -78,5 +78,5 @@ elif [[ $# -ge 1 ]]; then
 elif ps -ef | egrep -v grep | grep -q php-fpm; then
     echo "Service already running, please restart container to apply changes"
 else
-    exec php-fpm
+    exec php-fpm7.0
 fi
