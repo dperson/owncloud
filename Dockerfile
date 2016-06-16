@@ -21,6 +21,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     curl -LOC- -s \
         https://download.owncloud.org/community/owncloud-${version}.tar.bz2 && \
     sha256sum owncloud-${version}.tar.bz2 | grep -q "$sha256sum" && \
+    mkdir -p /var/www && \
     tar -xf owncloud-${version}.tar.bz2 -C /var/www owncloud && \
     mkdir -p /var/www/owncloud/data && \
     for i in /etc/php/7.0/*/php.ini; do \
