@@ -67,8 +67,9 @@ shift $(( OPTIND - 1 ))
 
 find /var/www/owncloud -type f -print0 | xargs -0 chmod 0640
 find /var/www/owncloud -type d -print0 | xargs -0 chmod 0750
-chown -Rh www-data. /var/www/owncloud
-chown -h root:www-data /var/www/owncloud/data/.htaccess 2>/dev/null || :
+mkdir -p /run/php
+chown -Rh www-data. /var/www/owncloud /run/php
+chown -h root:www-data /var/www/owncloud/data/.htaccess 2>/dev/null
 
 if [[ $# -ge 1 && -x $(which $1 2>&-) ]]; then
     exec "$@"
@@ -78,5 +79,5 @@ elif [[ $# -ge 1 ]]; then
 elif ps -ef | egrep -v grep | grep -q php-fpm; then
     echo "Service already running, please restart container to apply changes"
 else
-    exec php-fpm7.0
+    exec su -l www-data -s /bin/bash -c "exec php-fpm7.0"
 fi
