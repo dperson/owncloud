@@ -23,27 +23,26 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     sha256sum owncloud-${version}.tar.bz2 | grep -q "$sha256sum" && \
     tar -xf owncloud-${version}.tar.bz2 -C /var/www owncloud && \
     mkdir -p /var/www/owncloud/data && \
-    sed -i '/server.errorlog/s|^|#|' /etc/lighttpd/lighttpd.conf && \
-    sed -i '/server.document-root/s|/html||' /etc/lighttpd/lighttpd.conf && \
-    sed -i '/mod_rewrite/a \ \t"mod_setenv",' /etc/lighttpd/lighttpd.conf && \
+    conf=/etc/lighttpd/lighttpd.conf && \
+    sed -i '/server.errorlog/s|^|#|' $conf && \
+    sed -i '/server.document-root/s|/html||' $conf && \
+    sed -i '/mod_rewrite/a \ \t"mod_setenv",' $conf && \
     echo '\nsetenv.add-response-header += ( "X-XSS-Protection" => "1; mode=block" )' \
-                >>/etc/lighttpd/lighttpd.conf && \
+                >>$conf && \
     echo 'setenv.add-response-header += ( "X-Content-Type-Options" => "nosniff" )' \
-                >>/etc/lighttpd/lighttpd.conf && \
-    echo 'setenv.add-response-header += ( "X-Robots-Tag" => "none" )' \
-                >>/etc/lighttpd/lighttpd.conf && \
+                >>$conf && \
+    echo 'setenv.add-response-header += ( "X-Robots-Tag" => "none" )' >>$conf&&\
     echo 'setenv.add-response-header += ( "X-Frame-Options" => "SAMEORIGIN" )' \
-                >>/etc/lighttpd/lighttpd.conf && \
+                >>$conf && \
     echo '\n$HTTP["url"] =~ "^/owncloud/(?:\.htaccess|data|config|db_structure\.xml|README)" {' \
-                >>/etc/lighttpd/lighttpd.conf && \
-    echo '\turl.access-deny = ("")'  >>/etc/lighttpd/lighttpd.conf && \
-    echo '}' >>/etc/lighttpd/lighttpd.conf && \
-    echo '\n$HTTP["url"] =~ "^/owncloud($|/)" {' \
-                >>/etc/lighttpd/lighttpd.conf && \
-    echo '\tdir-listing.activate = "disable"' >>/etc/lighttpd/lighttpd.conf && \
-    echo '}' >>/etc/lighttpd/lighttpd.conf && \
-    /bin/echo -e 'url.redirect  = ("^/$" => "/owncloud")' \
-                >>/etc/lighttpd/lighttpd.conf && \
+                >>$conf && \
+    echo '\turl.access-deny = ("")' >>$conf && \
+    echo '}' >>$conf && \
+    echo '\n$HTTP["url"] =~ "^/owncloud($|/)" {' >>$conf && \
+    echo '\tdir-listing.activate = "disable"' >>$conf && \
+    echo '}' >>$conf && \
+    /bin/echo -e 'url.redirect  = ("^/$" => "/owncloud")' >>$conf && \
+    unset conf && \
     sed -i '/^#cgi\.assign/,$s/^#//; /"\.pl"/i \ \t".cgi"  => "/usr/bin/perl",'\
                 /etc/lighttpd/conf-available/10-cgi.conf && \
     sed -i -e '/CHILDREN/s/[0-9][0-9]*/16/' \
