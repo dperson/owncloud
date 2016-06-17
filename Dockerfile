@@ -63,6 +63,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
         sed -i 's/^;*\(output_buffering\) *=.*/\1 = 0/' $i; \
         sed -i 's/^;*\(post_max_size\) *=.*/\1 = 16G/' $i; \
         sed -i 's/^;*\(upload_max_filesize\) *=.*/\1 = 16G/' $i; \
+        sed -i 's/^;*\(opcache.enable\) *=.*/\1 = 1/' $i; \
         sed -i 's/^;*\(opcache.enable_cli\) *=.*/\1 = 1/' $i; \
         sed -i 's/^;*\(opcache.fast_shutdown\) *=.*/\1 = 1/' $i; \
         sed -i 's/^;*\(opcache.interned_strings_buffer\) *=.*/\1 = 8/' $i; \
