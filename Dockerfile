@@ -25,12 +25,13 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     tar -xf owncloud-${version}.tar.bz2 -C /var/www owncloud && \
     mkdir -p /var/www/owncloud/data && \
     for i in /etc/php/7.0/*/php.ini; do \
-        sed -i 's/^;*\(output_buffering\) *=.*/\1 = 0/' $i; \
+        sed -i 's|^;*\(doc_root\) *=.*|\1 = "/var/www/owncloud"|' $i; \
         sed -i 's/^;*\(expose_php\) *=.*/\1 = On/' $i; \
-        sed -i 's/^;*\(post_max_size\) *=.*/\1 = 16G/' $i; \
-        sed -i 's/^;*\(upload_max_filesize\) *=.*/\1 = 16G/' $i; \
         sed -i 's/^;*\(max_execution_time\) *=.*/\1 = 3600/' $i; \
         sed -i 's/^;*\(max_input_time\) *=.*/\1 = 3600/' $i; \
+        sed -i 's/^;*\(output_buffering\) *=.*/\1 = 0/' $i; \
+        sed -i 's/^;*\(post_max_size\) *=.*/\1 = 16G/' $i; \
+        sed -i 's/^;*\(upload_max_filesize\) *=.*/\1 = 16G/' $i; \
         sed -i 's/^;*\(opcache.enable_cli\) *=.*/\1 = 1' $i; \
         sed -i 's/^;*\(opcache.fast_shutdown\) *=.*/\1 = 1' $i; \
         sed -i 's/^;*\(opcache.interned_strings_buffer\) *=.*/\1 = 8' $i; \
