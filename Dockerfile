@@ -39,6 +39,8 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
         echo 'opcache.memory_consumption=128'; \
         echo 'opcache.revalidate_freq=60'; } \
                 >>/etc/php/mods-available/opcache.ini && \
+    sed -i 's/^\(listen = \).*/\180/' /etc/php/7.0/fpm/pool.d/www.conf && \
+    sed -i 's/^;*\(daemonize = \).*/\1no/' /etc/php/7.0/fpm/php-fpm.conf && \
     find /var/www/owncloud -type f -print0 | xargs -0 chmod 0640 && \
     find /var/www/owncloud -type d -print0 | xargs -0 chmod 0750 && \
     [ -d /run/php ] || mkdir -p /run/php && \
