@@ -25,22 +25,22 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     tar -xf owncloud-${version}.tar.bz2 -C /var/www owncloud && \
     mkdir -p /var/www/owncloud/data && \
     for i in /etc/php/7.0/*/php.ini; do \
-        sed -i '/^output_buffering/s/4096/0/' $i; \
-        sed -i '/^expose_php/s/Off/On/' $i; \
-        sed -i '/^post_max_size/s/8M/16G/' $i; \
-        sed -i '/^upload_max_filesize/s/2M/16G/' $i; \
-        sed -i '/^max_execution_time/s/[0-9][0-9]*/3600/' $i; \
-        sed -i '/^max_input_time/s/[0-9][0-9]*/3600/' $i; \
+        sed -i 's/^;*\(output_buffering\) *=.*/\1 = 0/' $i; \
+        sed -i 's/^;*\(expose_php\) *=.*/\1 = On/' $i; \
+        sed -i 's/^;*\(post_max_size\) *=.*/\1 = 16G/' $i; \
+        sed -i 's/^;*\(upload_max_filesize\) *=.*/\1 = 16G/' $i; \
+        sed -i 's/^;*\(max_execution_time\) *=.*/\1 = 3600/' $i; \
+        sed -i 's/^;*\(max_input_time\) *=.*/\1 = 3600/' $i; \
+        sed -i 's/^;*\(opcache.enable_cli\) *=.*/\1 = 1' $i; \
+        sed -i 's/^;*\(opcache.fast_shutdown\) *=.*/\1 = 1' $i; \
+        sed -i 's/^;*\(opcache.interned_strings_buffer\) *=.*/\1 = 8' $i; \
+        sed -i 's/^;*\(opcache.max_accelerated_files\) *=.*/\1 = 4000' $i; \
+        sed -i 's/^;*\(opcache.memory_consumption\) *=.*/\1 = 128' $i; \
+        sed -i 's/^;*\(opcache.revalidate_freq\) *=.*/\1 = 60' $i; \
     done && \
-    { echo 'opcache.enable_cli=1'; \
-        echo 'opcache.fast_shutdown=1'; \
-        echo 'opcache.interned_strings_buffer=8'; \
-        echo 'opcache.max_accelerated_files=4000'; \
-        echo 'opcache.memory_consumption=128'; \
-        echo 'opcache.revalidate_freq=60'; } \
-                >>/etc/php/mods-available/opcache.ini && \
-    sed -i 's/^\(listen = \).*/\180/' /etc/php/7.0/fpm/pool.d/www.conf && \
-    sed -i 's/^;*\(daemonize = \).*/\1no/' /etc/php/7.0/fpm/php-fpm.conf && \
+    sed -i 's/^;*\(listen\) *=.*/\1 = 80/' /etc/php/7.0/fpm/pool.d/www.conf && \
+    sed -i 's/^;*\(daemonize\) *=.*/\1 = no/' /etc/php/7.0/fpm/php-fpm.conf && \
+    echo -e '\n[apc]\napc.enable_cli = 1' >>/etc/php/mods-available/apcu.ini &&\
     find /var/www/owncloud -type f -print0 | xargs -0 chmod 0640 && \
     find /var/www/owncloud -type d -print0 | xargs -0 chmod 0750 && \
     [ -d /run/php ] || mkdir -p /run/php && \
