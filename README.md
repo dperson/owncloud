@@ -15,29 +15,35 @@ connected clients.
 
 # How to use this image
 
-This ownCloud container was built with Nginx. It defaults to SQLite for the DB,
-but you can choose PostgreSQL or MySQL, for more performance.
+This ownCloud container was built for use with Nginx. It defaults to SQLite for
+the DB ,but you can choose PostgreSQL or MySQL, for more performance.
 
 ## Hosting a ownCloud instance on port 8000
 
-    sudo docker run -it --name owncloud -p 8000:80 -d dperson/owncloud
+    sudo docker run -it --name owncloud -d dperson/owncloud
+    sudo docker run -it --name web --link owncloud:owncloud -p 8000:80 -d \
+                 dperson/nginx -u "owncloud:9000;/owncloud/"
 
 OR with a DB:
 
     sudo docker run -it --name postgres -d postgres
-    sudo docker run -it --name owncloud --link postgresql:db -p 8000:80 -d \
-                dperson/owncloud
+    sudo docker run -it --name owncloud --link postgresql:db -d dperson/owncloud
+    sudo docker run -it --name web --link owncloud:owncloud -p 8000:80 -d \
+                 dperson/nginx -u "owncloud:9000;/owncloud/"
 
 AND/OR set the host name (important for the WebDAV feature):
 
-    sudo docker run -it -h host.domain.com --name owncloud -p 8000:80 -d \
-                dperson/owncloud
+    sudo docker run -it -h host.domain.com --name owncloud -d dperson/owncloud
+    sudo docker run -it --name web --link owncloud:owncloud -p 8000:80 -d \
+                 dperson/nginx -u "owncloud:9000;/owncloud/"
 
 AND/OR set local storage:
 
-    sudo docker run -it --name owncloud -p 8000:80 \
+    sudo docker run -it --name owncloud \
                 -v /path/to/owncloud/directory:/var/www/owncloud/data -d \
                 dperson/owncloud
+    sudo docker run -it --name web --link owncloud:owncloud -p 8000:80 -d \
+                    dperson/nginx -u "owncloud:9000;/owncloud/"
 
 ## Configuration
 
@@ -72,7 +78,7 @@ OR using `environment variables`
 
 Will get you the same settings as
 
-    sudo docker run -it --name owncloud -p 8000:80 -d dperson/owncloud
+    sudo docker run -it --name owncloud -d dperson/owncloud
     sudo docker exec -it owncloud owncloud.sh -t EST5EDT ls -AlF /etc/localtime
     sudo docker restart owncloud
 

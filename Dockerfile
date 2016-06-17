@@ -38,7 +38,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
         sed -i 's/^;*\(opcache.memory_consumption\) *=.*/\1 = 128' $i; \
         sed -i 's/^;*\(opcache.revalidate_freq\) *=.*/\1 = 60' $i; \
     done && \
-    sed -i 's/^;*\(listen\) *=.*/\1 = 80/' /etc/php/7.0/fpm/pool.d/www.conf && \
+    sed -i 's/^;*\(listen\) *=.*/\1 = 9000/' /etc/php/7.0/fpm/pool.d/www.conf && \
     sed -i 's/^;*\(daemonize\) *=.*/\1 = no/' /etc/php/7.0/fpm/php-fpm.conf && \
     echo -e '\n[apc]\napc.enable_cli = 1' >>/etc/php/mods-available/apcu.ini &&\
     find /var/www/owncloud -type f -print0 | xargs -0 chmod 0640 && \
@@ -55,6 +55,6 @@ COPY owncloud.sh /usr/bin/
 
 VOLUME ["/var/www/owncloud"]
 
-EXPOSE 80
+EXPOSE 9000
 
 ENTRYPOINT ["owncloud.sh"]
