@@ -72,8 +72,8 @@ shift $(( OPTIND - 1 ))
 }
 find /var/www/owncloud -type f -print0 | xargs -0 chmod 0640
 find /var/www/owncloud -type d -print0 | xargs -0 chmod 0750
-mkdir -p /run/php
-chown -Rh www-data. /var/www/owncloud /run/php
+mkdir -p /run/lighttpd
+chown -Rh www-data. /run/lighttpd /var/cache/lighttpd /var/www/owncloud
 chown -h root:www-data /var/www/owncloud/data/.htaccess 2>/dev/null
 
 if [[ $# -ge 1 && -x $(which $1 2>&-) ]]; then
@@ -81,8 +81,8 @@ if [[ $# -ge 1 && -x $(which $1 2>&-) ]]; then
 elif [[ $# -ge 1 ]]; then
     echo "ERROR: command not found: $1"
     exit 13
-elif ps -ef | egrep -v grep | grep -q php-fpm; then
+elif ps -ef | egrep -v grep | grep -q lighttpd; then
     echo "Service already running, please restart container to apply changes"
 else
-    exec php-fpm7.0 -F
+    exec lighttpd -D -f /etc/lighttpd/lighttpd.conf
 fi
