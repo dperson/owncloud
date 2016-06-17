@@ -32,12 +32,12 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
         sed -i 's/^;*\(output_buffering\) *=.*/\1 = 0/' $i; \
         sed -i 's/^;*\(post_max_size\) *=.*/\1 = 16G/' $i; \
         sed -i 's/^;*\(upload_max_filesize\) *=.*/\1 = 16G/' $i; \
-        sed -i 's/^;*\(opcache.enable_cli\) *=.*/\1 = 1' $i; \
-        sed -i 's/^;*\(opcache.fast_shutdown\) *=.*/\1 = 1' $i; \
-        sed -i 's/^;*\(opcache.interned_strings_buffer\) *=.*/\1 = 8' $i; \
-        sed -i 's/^;*\(opcache.max_accelerated_files\) *=.*/\1 = 4000' $i; \
-        sed -i 's/^;*\(opcache.memory_consumption\) *=.*/\1 = 128' $i; \
-        sed -i 's/^;*\(opcache.revalidate_freq\) *=.*/\1 = 60' $i; \
+        sed -i 's/^;*\(opcache.enable_cli\) *=.*/\1 = 1/' $i; \
+        sed -i 's/^;*\(opcache.fast_shutdown\) *=.*/\1 = 1/' $i; \
+        sed -i 's/^;*\(opcache.interned_strings_buffer\) *=.*/\1 = 8/' $i; \
+        sed -i 's/^;*\(opcache.max_accelerated_files\) *=.*/\1 = 4000/' $i; \
+        sed -i 's/^;*\(opcache.memory_consumption\) *=.*/\1 = 128/' $i; \
+        sed -i 's/^;*\(opcache.revalidate_freq\) *=.*/\1 = 60/' $i; \
     done && \
     sed -i 's/^;*\(listen\) *=.*/\1 = 9000/' /etc/php/7.0/fpm/pool.d/www.conf && \
     sed -i 's/^;*\(daemonize\) *=.*/\1 = no/' /etc/php/7.0/fpm/php-fpm.conf && \
@@ -45,10 +45,10 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     find /var/www/owncloud -type f -print0 | xargs -0 chmod 0640 && \
     find /var/www/owncloud -type d -print0 | xargs -0 chmod 0750 && \
     [ -d /run/php ] || mkdir -p /run/php && \
-    chown -Rh root:www-data /var/www/owncloud || : && \
+    { chown -Rh root:www-data /var/www/owncloud || :; } && \
     chown -Rh www-data. /var/www/owncloud/apps /var/www/owncloud/config \
                 /var/www/owncloud/data /var/www/owncloud/themes /run/php && \
-    chown -Rh root:www-data /var/www/owncloud/data/.htaccess || : && \
+    { chown -Rh root:www-data /var/www/owncloud/data/.htaccess || :; } && \
     apt-get purge -qqy ca-certificates curl && \
     apt-get autoremove -qqy && apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* owncloud-${version}.tar.bz2
