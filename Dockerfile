@@ -56,7 +56,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
                     /etc/lighttpd/conf-available/15-fastcgi-php.conf; } && \
     lighttpd-enable-mod fastcgi-php && \
     for i in /etc/php/7.0/*/php.ini; do \
-        sed -i 's|^;*\(doc_root\) *=.*|\1 = "/var/www/owncloud"|' $i; \
+        sed -i 's|^;*\(doc_root\) *=.*|\1 = "/var/www"|' $i; \
         sed -i 's/^;*\(expose_php\) *=.*/\1 = On/' $i; \
         sed -i 's/^;*\(max_execution_time\) *=.*/\1 = 3600/' $i; \
         sed -i 's/^;*\(max_input_time\) *=.*/\1 = 3600/' $i; \
