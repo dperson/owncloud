@@ -71,7 +71,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
         sed -i 's/^;*\(opcache.memory_consumption\) *=.*/\1 = 128/' $i; \
         sed -i 's/^;*\(opcache.revalidate_freq\) *=.*/\1 = 60/' $i; \
     done && \
-    echo '\n[apc]\napc.enable_cli = 1' >>/etc/php/mods-available/apcu.ini ||:&&\
+    echo '\n[apc]\napc.enable_cli = 1' >>/etc/php/7.0/mods-available/apcu.ini&&\
     mkdir -p /run/lighttpd && \
     find /var/www/owncloud -type f -print0 | xargs -0 chmod 0640 && \
     find /var/www/owncloud -type d -print0 | xargs -0 chmod 0750 && \
