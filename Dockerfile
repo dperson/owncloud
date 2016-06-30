@@ -24,7 +24,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     tar -xf owncloud-${version}.tar.bz2 -C /var/www owncloud && \
     mkdir -p /var/www/owncloud/data && \
     conf=/etc/lighttpd/lighttpd.conf && \
-    sed -i '/server.errorlog/s|^|#|' $conf && \
+    sed -i '/server.errorlog/s|var/log/lighttpd/error.log|dev/stderr|' $conf &&\
     sed -i '/server.document-root/s|/html||' $conf && \
     sed -i '/mod_rewrite/a \ \t"mod_setenv",' $conf && \
     echo '\nsetenv.add-response-header += ( "X-XSS-Protection" => "1; mode=block" )' \
@@ -43,6 +43,8 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     echo '}' >>$conf && \
     /bin/echo -e 'url.redirect  = ("^/$" => "/owncloud")' >>$conf && \
     unset conf && \
+    sed -i 's|var/log/lighttpd/access.log|dev/stdout|' \
+                /etc/lighttpd/conf-available/10-accesslog.conf && \
     sed -i '/^#cgi\.assign/,$s/^#//; /"\.pl"/i \ \t".cgi"  => "/usr/bin/perl",'\
                 /etc/lighttpd/conf-available/10-cgi.conf && \
     sed -i -e '/CHILDREN/s/[0-9][0-9]*/16/' \
@@ -54,6 +56,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
                     /etc/lighttpd/conf-available/15-fastcgi-php.conf && \
         sed -i '/"bin-environment"/a \ \t\t\t"MOD_X_SENDFILE2_ENABLED" => "1",'\
                     /etc/lighttpd/conf-available/15-fastcgi-php.conf; } && \
+    lighttpd-enable-mod accesslog && \
     lighttpd-enable-mod fastcgi-php && \
     for i in /etc/php/7.0/*/php.ini; do \
         sed -i 's|^;*\(doc_root\) *=.*|\1 = "/var/www"|' $i; \

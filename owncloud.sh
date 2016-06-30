@@ -84,5 +84,6 @@ elif [[ $# -ge 1 ]]; then
 elif ps -ef | egrep -v grep | grep -q lighttpd; then
     echo "Service already running, please restart container to apply changes"
 else
+    chmod 777 /dev/std* 2>/dev/null
     exec lighttpd -D -f /etc/lighttpd/lighttpd.conf
 fi
