@@ -3,6 +3,7 @@ MAINTAINER David Personette <dperson@gmail.com>
 
 # Install php and ownCloud
 RUN export DEBIAN_FRONTEND='noninteractive' && \
+    export url='https://download.owncloud.org/community' && \
     export version='9.0.2' && \
     export sha256sum='845c43fe981fa0fd07fc3708f41f1ea15ecb11c2a15c65a4de19' && \
     apt-get update -qq && \
@@ -18,8 +19,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
                 php7.0-json php7.0-ldap smbclient \
                 $(apt-get -s dist-upgrade|awk '/^Inst.*ecurity/ {print $2}') &&\
     echo "downloading owncloud-${version}.tar.bz2 ..." && \
-    curl -LOC- -s \
-        https://download.owncloud.org/community/owncloud-${version}.tar.bz2 && \
+    curl -LOC- -s ${url}/owncloud-${version}.tar.bz2 && \
     sha256sum owncloud-${version}.tar.bz2 | grep -q "$sha256sum" && \
     tar -xf owncloud-${version}.tar.bz2 -C /var/www owncloud && \
     mkdir -p /var/www/owncloud/data && \
