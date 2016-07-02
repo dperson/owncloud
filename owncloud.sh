@@ -70,11 +70,13 @@ shift $(( OPTIND - 1 ))
         sed -i '/^);/i\  '"'memcache.local' => '\\\\OC\\\\Memcache\\\\APCu'," \
                     /var/www/owncloud/config/config.php
 }
+tar -xf /owncloud-*.tar.bz2 -C /var/www owncloud
+mkdir -p /run/lighttpd /var/www/owncloud/data
 find /var/www/owncloud -type f -print0 | xargs -0 chmod 0640
 find /var/www/owncloud -type d -print0 | xargs -0 chmod 0750
-mkdir -p /run/lighttpd
-chown -Rh www-data. /run/lighttpd /var/cache/lighttpd /var/www/owncloud
-chown -h root:www-data /var/www/owncloud/data/.htaccess 2>/dev/null
+chown -Rh root:www-data /var/www/owncloud
+chown -Rh www-data. /run/lighttpd /var/cache/lighttpd /var/www/owncloud/*/
+find /var/www/owncloud -name .htaccess -exec chown -Rh root:www-data {} \;
 
 if [[ $# -ge 1 && -x $(which $1 2>&-) ]]; then
     exec "$@"

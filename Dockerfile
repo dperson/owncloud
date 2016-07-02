@@ -20,10 +20,8 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
                 php7.0-zip smbclient \
                 $(apt-get -s dist-upgrade|awk '/^Inst.*ecurity/ {print $2}') &&\
     echo "downloading owncloud-${version}.tar.bz2 ..." && \
-    curl -LOC- -s ${url}/owncloud-${version}.tar.bz2 && \
+    curl -LOsC- ${url}/owncloud-${version}.tar.bz2 && \
     sha256sum owncloud-${version}.tar.bz2 | grep -q "$sha256sum" && \
-    tar -xf owncloud-${version}.tar.bz2 -C /var/www owncloud && \
-    mkdir -p /var/www/owncloud/data && \
     conf=/etc/lighttpd/lighttpd.conf dir=/etc/lighttpd/conf-available \
                 header=setenv.add-response-header \
                 match='(?:\.htaccess|data|config|db_structure\.xml|README)' && \
@@ -71,16 +69,9 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     done && \
     echo '\n[apc]\napc.enable_cli = 1' >>/etc/php/7.0/mods-available/apcu.ini&&\
     mkdir -p /run/lighttpd && \
-    find /var/www/owncloud -type f -print0 | xargs -0 chmod 0640 && \
-    find /var/www/owncloud -type d -print0 | xargs -0 chmod 0750 && \
-    { chown -Rh root:www-data /var/www/owncloud || :; } && \
-    chown -Rh www-data. /run/lighttpd /var/www/owncloud/apps \
-                /var/www/owncloud/config /var/www/owncloud/data \
-                /var/www/owncloud/themes && \
-    { chown -Rh root:www-data /var/www/owncloud/data/.htaccess || :; } && \
     apt-get purge -qqy ca-certificates curl && \
     apt-get autoremove -qqy && apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* owncloud-${version}.tar.bz2
+    rm -rf /var/lib/apt/lists/* /tmp/*
 COPY owncloud.sh /usr/bin/
 
 VOLUME ["/var/cache/lighttpd", "/var/www/owncloud"]
