@@ -4,8 +4,8 @@ MAINTAINER David Personette <dperson@gmail.com>
 # Install php and ownCloud
 RUN export DEBIAN_FRONTEND='noninteractive' && \
     export url='https://download.owncloud.org/community' && \
-    export version='9.0.2' && \
-    export sha256sum='845c43fe981fa0fd07fc3708f41f1ea15ecb11c2a15c65a4de19' && \
+    export version='9.0.3' && \
+    export sha256sum='5cf45c1b75434496635a58fcbece668bc0abb40f04d8304ce6d0' && \
     apt-get update -qq && \
     apt-get install -qqy --no-install-recommends ca-certificates curl && \
     echo "deb http://packages.dotdeb.org jessie all" \
@@ -16,7 +16,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
                 php7.0-apcu php7.0-cgi php7.0-gd php7.0-intl php7.0-mcrypt \
                 php7.0-mysql php7.0-opcache php7.0-pgsql php7.0-sqlite3 \
                 php7.0-bz2 php7.0-curl php7.0-gmp php7.0-imagick php7.0-imap \
-                php7.0-json php7.0-ldap smbclient \
+                php7.0-json php7.0-ldap php7.0-xml php7.0-zip smbclient \
                 $(apt-get -s dist-upgrade|awk '/^Inst.*ecurity/ {print $2}') &&\
     echo "downloading owncloud-${version}.tar.bz2 ..." && \
     curl -LOC- -s ${url}/owncloud-${version}.tar.bz2 && \
