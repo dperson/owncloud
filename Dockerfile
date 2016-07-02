@@ -13,21 +13,23 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     curl -Ls https://www.dotdeb.org/dotdeb.gpg | apt-key add - && \
     apt-get update -qq && \
     apt-get install -qqy --no-install-recommends bzip2 lighttpd openssl \
-                php7.0-apcu php7.0-cgi php7.0-gd php7.0-intl php7.0-mcrypt \
-                php7.0-mysql php7.0-opcache php7.0-pgsql php7.0-sqlite3 \
-                php7.0-bz2 php7.0-curl php7.0-gmp php7.0-imagick php7.0-imap \
-                php7.0-json php7.0-ldap php7.0-xml php7.0-zip smbclient \
+                php7.0-apcu php7.0-bz2 php7.0-cgi php7.0-curl php7.0-gd \
+                php7.0-gmp php7.0-imagick php7.0-imap php7.0-intl php7.0-json \
+                php7.0-ldap php7.0-mbstring php7.0-mcrypt php7.0-mysql \
+                php7.0-opcache php7.0-pgsql php7.0-sqlite3 php7.0-xml \
+                php7.0-zip smbclient \
                 $(apt-get -s dist-upgrade|awk '/^Inst.*ecurity/ {print $2}') &&\
     echo "downloading owncloud-${version}.tar.bz2 ..." && \
     curl -LOC- -s ${url}/owncloud-${version}.tar.bz2 && \
     sha256sum owncloud-${version}.tar.bz2 | grep -q "$sha256sum" && \
     tar -xf owncloud-${version}.tar.bz2 -C /var/www owncloud && \
     mkdir -p /var/www/owncloud/data && \
-    conf=/etc/lighttpd/lighttpd.conf header=setenv.add-response-header \
-                match='(?:\.htaccess|data|config|db_structure\.xml|README)'&& \
+    conf=/etc/lighttpd/lighttpd.conf dir=/etc/lighttpd/conf-available \
+                header=setenv.add-response-header \
+                match='(?:\.htaccess|data|config|db_structure\.xml|README)' && \
     sed -i '/server.errorlog/s|^|#|' $conf && \
     sed -i '/server.document-root/s|/html||' $conf && \
-    sed -i '/mod_rewrite/a \ \t"mod_setenv",' $conf && \
+    sed -i '/mod_rewrite/a\ \t"mod_setenv",' $conf && \
     echo "\\n$header"' += ( "X-XSS-Protection" => "1; mode=block" )' >>$conf &&\
     echo "$header"' += ( "X-Content-Type-Options" => "nosniff" )' >>$conf && \
     echo "$header"' += ( "X-Robots-Tag" => "none" )' >>$conf&& \
@@ -37,20 +39,18 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     echo '$HTTP["url"] =~ "^/owncloud/'"$match"'" {' >>$conf && \
     echo '\turl.access-deny = ("")\n}' >>$conf && \
     echo '\nurl.redirect  = ("^/$" => "/owncloud")' >>$conf && \
-    unset conf header match && \
-    sed -i 's|var/log/lighttpd/access.log|dev/stdout|' \
-                /etc/lighttpd/conf-available/10-accesslog.conf && \
-    sed -i '/^#cgi\.assign/,$s/^#//; /"\.pl"/i \ \t".cgi"  => "/usr/bin/perl",'\
-                /etc/lighttpd/conf-available/10-cgi.conf && \
+    sed -i 's|var/log/lighttpd/access.log|dev/stdout|' $dir/10-accesslog.conf&&\
+    sed -i '/^#cgi\.assign/,$s/^#//; /"\.pl"/i\ \t".cgi"  => "/usr/bin/perl",' \
+                $dir/10-cgi.conf && \
     sed -i -e '/CHILDREN/s/[0-9][0-9]*/16/' \
-                -e '/max-procs/a \ \t\t"idle-timeout" => 20,' \
-                /etc/lighttpd/conf-available/15-fastcgi-php.conf && \
-    grep -q 'allow-x-send-file' \
-                /etc/lighttpd/conf-available/15-fastcgi-php.conf || { \
-        sed -i '/idle-timeout/a \ \t\t"allow-x-send-file" => "enable",' \
-                    /etc/lighttpd/conf-available/15-fastcgi-php.conf && \
-        sed -i '/"bin-environment"/a \ \t\t\t"MOD_X_SENDFILE2_ENABLED" => "1",'\
-                    /etc/lighttpd/conf-available/15-fastcgi-php.conf; } && \
+                -e '/max-procs/a\ \t\t"idle-timeout" => 20,' \
+                $dir/15-fastcgi-php.conf && \
+    grep -q 'allow-x-send-file' $dir/15-fastcgi-php.conf || { \
+        sed -i '/idle-timeout/a\ \t\t"allow-x-send-file" => "enable",' \
+                    $dir/15-fastcgi-php.conf && \
+        sed -i '/"bin-environment"/a\ \t\t\t"MOD_X_SENDFILE2_ENABLED" => "1",' \
+                    $dir/15-fastcgi-php.conf; } && \
+    unset conf dir header match && \
     lighttpd-enable-mod accesslog && \
     lighttpd-enable-mod fastcgi-php && \
     for i in /etc/php/7.0/*/php.ini; do \
