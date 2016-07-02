@@ -33,7 +33,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     echo "$header"' += ( "X-Robots-Tag" => "none" )' >>$conf&& \
     echo "$header"' += ( "X-Frame-Options" => "SAMEORIGIN" )' >>$conf && \
     echo '\n$HTTP["url"] =~ "^/owncloud($|/)" {' >>$conf && \
-    echo 'tdir-listing.activate = "disable"\n}' >>$conf && \
+    echo '\tdir-listing.activate = "disable"\n}' >>$conf && \
     echo '$HTTP["url"] =~ "^/owncloud/'"$match"'" {' >>$conf && \
     echo '\turl.access-deny = ("")\n}' >>$conf && \
     echo '\nurl.redirect  = ("^/$" => "/owncloud")' >>$conf && \
