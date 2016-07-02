@@ -23,26 +23,21 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     sha256sum owncloud-${version}.tar.bz2 | grep -q "$sha256sum" && \
     tar -xf owncloud-${version}.tar.bz2 -C /var/www owncloud && \
     mkdir -p /var/www/owncloud/data && \
-    conf=/etc/lighttpd/lighttpd.conf && \
-    sed -i '/server.errorlog/s|var/log/lighttpd/error.log|dev/stderr|' $conf &&\
+    conf=/etc/lighttpd/lighttpd.conf header=setenv.add-response-header \
+                match='(?:\.htaccess|data|config|db_structure\.xml|README)'&& \
+    sed -i '/server.errorlog/s|^|#|' $conf && \
     sed -i '/server.document-root/s|/html||' $conf && \
     sed -i '/mod_rewrite/a \ \t"mod_setenv",' $conf && \
-    echo '\nsetenv.add-response-header += ( "X-XSS-Protection" => "1; mode=block" )' \
-                >>$conf && \
-    echo 'setenv.add-response-header += ( "X-Content-Type-Options" => "nosniff" )' \
-                >>$conf && \
-    echo 'setenv.add-response-header += ( "X-Robots-Tag" => "none" )' >>$conf&&\
-    echo 'setenv.add-response-header += ( "X-Frame-Options" => "SAMEORIGIN" )' \
-                >>$conf && \
-    echo '\n$HTTP["url"] =~ "^/owncloud/(?:\.htaccess|data|config|db_structure\.xml|README)" {' \
-                >>$conf && \
-    echo '\turl.access-deny = ("")' >>$conf && \
-    echo '}' >>$conf && \
+    echo "\\n$header"' += ( "X-XSS-Protection" => "1; mode=block" )' >>$conf &&\
+    echo "$header"' += ( "X-Content-Type-Options" => "nosniff" )' >>$conf && \
+    echo "$header"' += ( "X-Robots-Tag" => "none" )' >>$conf&& \
+    echo "$header"' += ( "X-Frame-Options" => "SAMEORIGIN" )' >>$conf && \
     echo '\n$HTTP["url"] =~ "^/owncloud($|/)" {' >>$conf && \
-    echo '\tdir-listing.activate = "disable"' >>$conf && \
-    echo '}' >>$conf && \
-    /bin/echo -e 'url.redirect  = ("^/$" => "/owncloud")' >>$conf && \
-    unset conf && \
+    echo 'tdir-listing.activate = "disable"\n}' >>$conf && \
+    echo '$HTTP["url"] =~ "^/owncloud/'"$match"'" {' >>$conf && \
+    echo '\turl.access-deny = ("")\n}' >>$conf && \
+    echo '\nurl.redirect  = ("^/$" => "/owncloud")' >>$conf && \
+    unset conf header match && \
     sed -i 's|var/log/lighttpd/access.log|dev/stdout|' \
                 /etc/lighttpd/conf-available/10-accesslog.conf && \
     sed -i '/^#cgi\.assign/,$s/^#//; /"\.pl"/i \ \t".cgi"  => "/usr/bin/perl",'\
