@@ -72,9 +72,11 @@ shift $(( OPTIND - 1 ))
 }
 tar -xf /owncloud-*.tar.bz2 -C /var/www owncloud
 mkdir -p /run/lighttpd /var/www/owncloud/data
+mkfifo -m 0660 /tmp/log
 find /var/www/owncloud -type f -print0 | xargs -0 chmod 0640
 find /var/www/owncloud -type d -print0 | xargs -0 chmod 0750
-chown -Rh www-data. /run/lighttpd /var/cache/lighttpd /var/www/owncloud
+chown -Rh root:www-data /var/www/owncloud /tmp/log
+chown -Rh www-data. /run/lighttpd /var/cache/lighttpd /var/www/owncloud/*/
 find /var/www/owncloud -name .htaccess -exec chown -Rh root:www-data {} \;
 
 if [[ $# -ge 1 && -x $(which $1 2>&-) ]]; then
@@ -85,6 +87,6 @@ elif [[ $# -ge 1 ]]; then
 elif ps -ef | egrep -v grep | grep -q lighttpd; then
     echo "Service already running, please restart container to apply changes"
 else
-    chmod 777 /dev/std* 2>/dev/null
+    tail -F /tmp/log &
     exec lighttpd -D -f /etc/lighttpd/lighttpd.conf
 fi

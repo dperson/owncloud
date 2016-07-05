@@ -37,7 +37,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     echo '$HTTP["url"] =~ "^/owncloud/'"$match"'" {' >>$conf && \
     echo '\turl.access-deny = ("")\n}' >>$conf && \
     echo '\nurl.redirect  = ("^/$" => "/owncloud")' >>$conf && \
-    sed -i 's|var/log/lighttpd/access.log|dev/stdout|' $dir/10-accesslog.conf&&\
+    sed -i 's|var/log/lighttpd/access.log|tmp/log|' $dir/10-accesslog.conf && \
     sed -i '/^#cgi\.assign/,$s/^#//; /"\.pl"/i\ \t".cgi"  => "/usr/bin/perl",' \
                 $dir/10-cgi.conf && \
     sed -i -e '/CHILDREN/s/[0-9][0-9]*/16/' \
