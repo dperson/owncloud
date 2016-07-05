@@ -40,6 +40,14 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     sed -i 's|var/log/lighttpd/access.log|tmp/log|' $dir/10-accesslog.conf && \
     sed -i '/^#cgi\.assign/,$s/^#//; /"\.pl"/i\ \t".cgi"  => "/usr/bin/perl",' \
                 $dir/10-cgi.conf && \
+    echo '\nfastcgi.server += ( ".cgi" =>\n\t((' >>$dir/10-fastcgi.conf && \
+    echo '\t\t"socket" => "/tmp/perl.socket" + var.PID,' \
+                >>$dir/10-fastcgi.conf && \
+    echo '\t\t"bin-path" => "/usr/share/smokeping/www/smokeping.fcgi",'\
+                >>$dir/10-fastcgi.conf && \
+    echo '\t\t"docroot" => "/var/www",' >>$dir/10-fastcgi.conf && \
+    echo '\t\t"check-local"     => "disable",\n\t))\n)' \
+                >>$dir/10-fastcgi.conf && \
     sed -i -e '/CHILDREN/s/[0-9][0-9]*/16/' \
                 -e '/max-procs/a\ \t\t"idle-timeout" => 20,' \
                 $dir/15-fastcgi-php.conf && \
