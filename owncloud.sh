@@ -73,8 +73,7 @@ shift $(( OPTIND - 1 ))
 tar -xf /owncloud-*.tar.bz2 -C /var/www owncloud
 mkdir -p /run/lighttpd /var/www/owncloud/data
 [[ -p /tmp/log ]] || mkfifo -m 0660 /tmp/log
-find /var/www/owncloud -type f -print0 | xargs -0 chmod 0640
-find /var/www/owncloud -type d -print0 | xargs -0 chmod 0750
+find /var/www/owncloud -print0 | xargs -0 chmod a-s,u=rwX,g=rX,o-rwx
 chown -Rh root:www-data /var/www/owncloud /tmp/log
 chown -Rh www-data. /run/lighttpd /var/cache/lighttpd /var/www/owncloud/*/
 find /var/www/owncloud -name .htaccess -exec chown -Rh root:www-data {} \;
