@@ -18,6 +18,18 @@
 
 set -o nounset                              # Treat unset variables as an error
 
+### proxy: Set the trusted_proxies for owncloud
+# Arguments:
+#   proxy) for example web
+# Return: properly configured trusted_proxies
+proxy() { local proxy="${1:-""}" file=/var/www/owncloud/config/config.php
+    if grep -q trusted_proxies $file; then
+        sed -i '/trusted_proxies/s/\[.*\]/['"'$proxy'"']/' $file
+    else
+        sed -i '/^);/i\  '"'trusted_proxies' => ['$proxy']," $file
+    fi
+}
+
 ### timezone: Set the timezone for the container
 # Arguments:
 #   timezone) for example EST5EDT
@@ -43,6 +55,7 @@ usage() { local RC=${1:-0}
     echo "Usage: ${0##*/} [-opt] [command]
 Options (fields in '[]' are optional, '<>' are required):
     -h          This help
+    -p \"<proxy>\" Configure trusted_proxies
     -t \"\"       Configure timezone
                 possible arg: \"[timezone]\" - zoneinfo timezone for container
 
@@ -51,9 +64,10 @@ The 'command' (if provided and valid) will be run instead of ownCloud
     exit $RC
 }
 
-while getopts ":ht:" opt; do
+while getopts ":hp:t:" opt; do
     case "$opt" in
         h) usage ;;
+        p) proxy "$OPTARG" ;;
         t) timezone "$OPTARG" ;;
         "?") echo "Unknown option: -$OPTARG"; usage 1 ;;
         ":") echo "No argument value for option: -$OPTARG"; usage 2 ;;
@@ -61,6 +75,7 @@ while getopts ":ht:" opt; do
 done
 shift $(( OPTIND - 1 ))
 
+[[ "${PROXY:-""}" ]] && proxy "$PROXY"
 [[ "${TZ:-""}" ]] && timezone "$TZ"
 [[ "${USERID:-""}" =~ ^[0-9]+$ ]] && usermod -u $USERID -o www-data
 [[ "${GROUPID:-""}" =~ ^[0-9]+$ ]] && groupmod -g $GROUPID -o www-data

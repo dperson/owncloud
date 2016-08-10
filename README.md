@@ -46,6 +46,7 @@ AND/OR set local storage:
     Usage: owncloud.sh [-opt] [command]
     Options (fields in '[]' are optional, '<>' are required):
         -h          This help
+        -p "<proxy>" Configure trusted_proxies
         -t ""       Configure timezone
                     possible arg: "[timezone]" - zoneinfo timezone for container
 
@@ -53,6 +54,7 @@ AND/OR set local storage:
 
 ENVIRONMENT VARIABLES (only available with `docker run`)
 
+ * `PROXY` - As above, configure the proxy, IE `172.17.0.11`
  * `TZ` - As above, configure the zoneinfo timezone, IE `EST5EDT`
  * `USERID` - Set the UID for the app user
  * `GROUPID` - Set the GID for the app user
