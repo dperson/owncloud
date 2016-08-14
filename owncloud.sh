@@ -23,11 +23,8 @@ set -o nounset                              # Treat unset variables as an error
 #   proxy) for example web
 # Return: properly configured trusted_proxies
 proxy() { local proxy="${1:-""}" file=/var/www/owncloud/config/config.php
-    if grep -q trusted_proxies $file; then
+    grep -q trusted_proxies $file ||
         sed -i '/trusted_proxies/s/\[.*\]/['"'$proxy'"']/' $file
-    else
-        sed -i '/^);/i\  '"'trusted_proxies' => ['$proxy']," $file
-    fi
 }
 
 ### timezone: Set the timezone for the container
