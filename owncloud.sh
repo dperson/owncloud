@@ -23,6 +23,7 @@ set -o nounset                              # Treat unset variables as an error
 #   proxy) for example web
 # Return: properly configured trusted_proxies
 proxy() { local proxy="${1:-""}" file=/var/www/owncloud/config/config.php
+    [[ -e $file ]] || sleep 20
     grep -q trusted_proxies $file ||
         sed -i "/^);/i\  'trusted_proxies' => ['$proxy']," $file
     grep -q forwarded_for_headers $file ||
