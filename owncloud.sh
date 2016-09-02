@@ -22,9 +22,12 @@ set -o nounset                              # Treat unset variables as an error
 # Arguments:
 #   proxy) for example web
 # Return: properly configured trusted_proxies
-proxy() { local proxy="${1:-""}" file=/var/www/owncloud/config/config.php
+proxy() { local proxy="${1:-""}" file=/var/www/owncloud/config/config.php \
+            header="X-Forwarded-For"
     grep -q trusted_proxies $file ||
-        sed -i '/trusted_proxies/s/\[.*\]/['"'$proxy'"']/' $file
+        sed -i "/^);\$/i\  'trusted_proxies' => array(['$proxy'])," $file
+    grep -q forwarded_for_headers $file ||
+        sed -i "/^);\$/i\  'forwarded_for_headers' => array(['$header'])," $file
 }
 
 ### timezone: Set the timezone for the container
