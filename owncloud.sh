@@ -28,6 +28,10 @@ proxy() { local proxy="${1:-""}" file=/var/www/owncloud/config/config.php
         sed -i "/^);/i\  'trusted_proxies' => ['$proxy']," $file
     grep -q forwarded_for_headers $file ||
         sed -i "/^);/i\  'forwarded_for_headers' => ['X-Forwarded-For']," $file
+    grep -q overwritehost $file ||
+        sed -i "/^);/i\  'overwritehost' => '$(hostname)'," $file
+    grep -q overwriteprotocol $file ||
+        sed -i "/^);/i\  'overwriteprotocol' => 'https'," $file
 }
 
 ### timezone: Set the timezone for the container
