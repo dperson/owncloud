@@ -29,7 +29,7 @@ proxy() { local proxy="${1:-""}" file=/var/www/owncloud/config/config.php
     grep -q forwarded_for_headers $file ||
         sed -i "/^);/i\  'forwarded_for_headers' => ['X-Forwarded-For']," $file
     grep -q overwritehost $file ||
-        sed -i "/^);/i\  'overwritehost' => '$(hostname)'," $file
+        sed -i "/^);/i\  'overwritehost' => '$(hostname -f)'," $file
     grep -q overwriteprotocol $file ||
         sed -i "/^);/i\  'overwriteprotocol' => 'https'," $file
 }
