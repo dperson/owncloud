@@ -1,4 +1,4 @@
-FROM debian:jessie
+FROM debian:stretch
 MAINTAINER David Personette <dperson@gmail.com>
 
 # Install php and ownCloud
@@ -8,7 +8,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     export sha256sum='a6bf3531ebb7e09a11aaae641bc3af933f339261424782841c64' && \
     apt-get update -qq && \
     apt-get install -qqy --no-install-recommends ca-certificates curl && \
-    echo "deb http://packages.dotdeb.org jessie all" \
+    echo "deb http://packages.dotdeb.org stretch all" \
                 >>/etc/apt/sources.list.d/dotdeb.list && \
     curl -Ls https://www.dotdeb.org/dotdeb.gpg | apt-key add - && \
     apt-get update -qq && \
