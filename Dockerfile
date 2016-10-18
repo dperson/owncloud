@@ -2,22 +2,21 @@ FROM debian:stretch
 MAINTAINER David Personette <dperson@gmail.com>
 
 # Install php and ownCloud
+    #echo "deb http://packages.dotdeb.org stretch all" \
+    #            >>/etc/apt/sources.list.d/dotdeb.list && \
+    #curl -Ls https://www.dotdeb.org/dotdeb.gpg | apt-key add - && \
+    #php7.0-apcu-bc php7.0-imagick
 RUN export DEBIAN_FRONTEND='noninteractive' && \
     export url='https://download.owncloud.org/community' && \
     export version='9.1.1' && \
     export sha256sum='a6bf3531ebb7e09a11aaae641bc3af933f339261424782841c64' && \
     apt-get update -qq && \
-    apt-get install -qqy --no-install-recommends ca-certificates curl gnupg1 &&\
-    echo "deb http://packages.dotdeb.org stretch all" \
-                >>/etc/apt/sources.list.d/dotdeb.list && \
-    curl -Ls https://www.dotdeb.org/dotdeb.gpg | apt-key add - && \
-    apt-get update -qq && \
-    apt-get install -qqy --no-install-recommends bzip2 lighttpd openssl \
-                php7.0-apcu-bc php7.0-bz2 php7.0-cgi php7.0-curl php7.0-gd \
-                php7.0-gmp php7.0-imagick php7.0-imap php7.0-intl php7.0-json \
+    apt-get install -qqy --no-install-recommends bzip2 ca-certificates curl \
+                lighttpd openssl smbclient php7.0-bz2 php7.0-cgi php7.0-curl \
+                php7.0-gd php7.0-gmp php7.0-imap php7.0-intl php7.0-json \
                 php7.0-ldap php7.0-mbstring php7.0-mcrypt php7.0-mysql \
                 php7.0-opcache php7.0-pgsql php7.0-sqlite3 php7.0-xml \
-                php7.0-zip smbclient \
+                php7.0-zip \
                 $(apt-get -s dist-upgrade|awk '/^Inst.*ecurity/ {print $2}') &&\
     echo "downloading owncloud-${version}.tar.bz2 ..." && \
     curl -LOsC- ${url}/owncloud-${version}.tar.bz2 && \
