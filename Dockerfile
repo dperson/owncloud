@@ -16,7 +16,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
                 php7.0-gd php7.0-gmp php7.0-imap php7.0-intl php7.0-json \
                 php7.0-ldap php7.0-mbstring php7.0-mcrypt php7.0-mysql \
                 php7.0-opcache php7.0-pgsql php7.0-sqlite3 php7.0-xml \
-                php7.0-zip \
+                php7.0-zip psutils \
                 $(apt-get -s dist-upgrade|awk '/^Inst.*ecurity/ {print $2}') &&\
     echo "downloading owncloud-${version}.tar.bz2 ..." && \
     curl -LOsC- ${url}/owncloud-${version}.tar.bz2 && \
