@@ -8,8 +8,8 @@ MAINTAINER David Personette <dperson@gmail.com>
     #php7.0-apcu-bc php7.0-imagick
 RUN export DEBIAN_FRONTEND='noninteractive' && \
     export url='https://download.owncloud.org/community' && \
-    export version='9.1.1' && \
-    export sha256sum='a6bf3531ebb7e09a11aaae641bc3af933f339261424782841c64' && \
+    export version='9.1.2' && \
+    export sha256sum='108bd46864aac95c90c246a2eda35b00513c14df132177add079' && \
     apt-get update -qq && \
     apt-get install -qqy --no-install-recommends bzip2 ca-certificates curl \
                 lighttpd openssl smbclient php7.0-bz2 php7.0-cgi php7.0-curl \
