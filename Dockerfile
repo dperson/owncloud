@@ -51,6 +51,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     echo '\n[apc]\napc.enable_cli = 1' >>/etc/php/7.0/mods-available/apcu.ini&&\
     apt-get purge -qqy ca-certificates curl && \
     apt-get autoremove -qqy && apt-get clean && \
+    ln -s /srv/www /var/ && \
     mkdir -p /run/php && \
     rm -rf /var/lib/apt/lists/* /tmp/*
 COPY owncloud.sh /usr/bin/
