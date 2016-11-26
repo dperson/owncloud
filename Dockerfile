@@ -33,14 +33,10 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     unset file && \
     for i in /etc/php/7.0/*/php.ini; do \
         sed -i 's|^;*\(doc_root\) *=.*|\1 = "/srv/www"|' $i; \
-        sed -i '/php_errors\.log/s|^;*\(error_log\) *=.*|\1 = /tmp/log|' $i; \
-        sed -i 's|^;*\(expose_php\) *=.*|\1 = On|' $i; \
         sed -i 's|^;*\(error_log\) *=.*|\1 = /proc/self/fd/2|' $i && \
+        sed -i 's|^;*\(expose_php\) *=.*|\1 = On|' $i; \
         sed -i 's|^;*\(max_execution_time\) *=.*|\1 = 3600|' $i; \
         sed -i 's|^;*\(max_input_time\) *=.*|\1 = 3600|' $i; \
-        sed -i 's|^;*\(output_buffering\) *=.*|\1 = 0|' $i; \
-        sed -i 's|^;*\(post_max_size\) *=.*|\1 = 16G|' $i; \
-        sed -i 's|^;*\(upload_max_filesize\) *=.*|\1 = 16G|' $i; \
         sed -i 's|^;*\(opcache.enable\) *=.*|\1 = 1|' $i; \
         sed -i 's|^;*\(opcache.enable_cli\) *=.*|\1 = 1|' $i; \
         sed -i 's|^;*\(opcache.fast_shutdown\) *=.*|\1 = 1|' $i; \
@@ -48,6 +44,9 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
         sed -i 's|^;*\(opcache.max_accelerated_files\) *=.*|\1 = 4000|' $i; \
         sed -i 's|^;*\(opcache.memory_consumption\) *=.*|\1 = 128|' $i; \
         sed -i 's|^;*\(opcache.revalidate_freq\) *=.*|\1 = 60|' $i; \
+        sed -i 's|^;*\(output_buffering\) *=.*|\1 = 0|' $i; \
+        sed -i 's|^;*\(post_max_size\) *=.*|\1 = 16G|' $i; \
+        sed -i 's|^;*\(upload_max_filesize\) *=.*|\1 = 16G|' $i; \
     done && \
     echo '\n[apc]\napc.enable_cli = 1' >>/etc/php/7.0/mods-available/apcu.ini&&\
     apt-get purge -qqy ca-certificates curl && \
