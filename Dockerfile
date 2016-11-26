@@ -35,6 +35,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
         sed -i 's|^;*\(doc_root\) *=.*|\1 = "/srv/www"|' $i; \
         sed -i '/php_errors\.log/s|^;*\(error_log\) *=.*|\1 = /tmp/log|' $i; \
         sed -i 's|^;*\(expose_php\) *=.*|\1 = On|' $i; \
+        sed -i 's|^;*\(error_log\) *=.*|\1 = /proc/self/fd/2|' $i && \
         sed -i 's|^;*\(max_execution_time\) *=.*|\1 = 3600|' $i; \
         sed -i 's|^;*\(max_input_time\) *=.*|\1 = 3600|' $i; \
         sed -i 's|^;*\(output_buffering\) *=.*|\1 = 0|' $i; \
