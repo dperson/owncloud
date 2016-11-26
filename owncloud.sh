@@ -91,7 +91,7 @@ shift $(( OPTIND - 1 ))
 }
 tar -xf /owncloud-*.tar.bz2 -C /srv/www owncloud
 mkdir -p /run/php /srv/www/owncloud/data
-find /srv/www/owncloud -print0 | xargs -0 chmod a-s,u=rwX,g=rX,o-rwx
+find /srv/www/owncloud -print0 | xargs -0 chmod a-s,u=rwX,g=rX,o=rX
 chown -Rh root:www-data /run/php /srv/www/owncloud
 chown -Rh www-data. /srv/www/owncloud/*/
 find /srv/www/owncloud -name .htaccess -exec chown -Rh root:www-data {} \;
