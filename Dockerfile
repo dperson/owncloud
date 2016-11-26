@@ -20,17 +20,15 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     echo "downloading owncloud-${version}.tar.bz2 ..." && \
     curl -LOsC- ${url}/owncloud-${version}.tar.bz2 && \
     sha256sum owncloud-${version}.tar.bz2 | grep -q "$sha256sum" && \
-    file=/etc/php/7.0/fpm/php-fpm.conf \
-    sed -i '/daemonize = /s/^;//' $file \
-    sed -i '/^daemonize = /s|=.*|= no|' $file \
-    sed -i '/error_log = /s|=.*|= /proc/self/fd/2|' $file \
-    file=/etc/php/7.0/fpm/pool.d/www.conf \
-    sed -i '/access_log = /s/^;//' $file \
-    sed -i '/^access_log = /s|=.*|= /proc/self/fd/2|' $file \
-    sed -i '/catch_workers_output = /s/^;//' $file \
-    sed -i '/clear_env = /s/^;//' $file \
-    sed -i '/^listen = /s|=.*|= [::]:9000|' $file \
-    unset file \
+    file=/etc/php/7.0/fpm/php-fpm.conf && \
+    sed -i 's|^;*\(daemonize\) *=.*|\1 = no|' $file && \
+    sed -i 's|^;*\(error_log\) *=.*|\1 = /proc/self/fd/2|' $file && \
+    file=/etc/php/7.0/fpm/pool.d/www.conf && \
+    sed -i 's|^;*\(access_log\) *=.*|\1 = /proc/self/fd/2|' $file && \
+    sed -i 's|^;*\(/catch_workers_output *=.*\)|\1|' $file && \
+    sed -i 's|^;*\(/clear_env *=.*\)|\1|' $file && \
+    sed -i 's|^;*\(listen\) *=.*|\1 = [::]:9000|' $file && \
+    unset file && \
     for i in /etc/php/7.0/*/php.ini; do \
         sed -i 's|^;*\(doc_root\) *=.*|\1 = "/var/www"|' $i; \
         sed -i '/php_errors\.log/s|^;*\(error_log\) *=.*|\1 = /tmp/log|' $i; \
