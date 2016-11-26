@@ -18,7 +18,8 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
                 php-imagick php-memcached php-redis procps \
                 $(apt-get -s dist-upgrade|awk '/^Inst.*ecurity/ {print $2}') &&\
     echo "downloading owncloud-${version}.tar.bz2 ..." && \
-    curl -LOsC- ${url}/owncloud-${version}.tar.bz2 && \
+    curl -LOs https://github.com/dperson/owncloud/raw/master/nginx.conf && \
+    curl -LOs ${url}/owncloud-${version}.tar.bz2 && \
     sha256sum owncloud-${version}.tar.bz2 | grep -q "$sha256sum" && \
     file=/etc/php/7.0/fpm/php-fpm.conf && \
     sed -i 's|^;*\(daemonize\) *=.*|\1 = no|' $file && \
