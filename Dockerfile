@@ -26,12 +26,12 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     file=/etc/php/7.0/fpm/pool.d/www.conf && \
     sed -i 's|^;*\(access_log\) *=.*|\1 = /proc/self/fd/2|' $file && \
     sed -i 's|^;*\(/catch_workers_output *=.*\)|\1|' $file && \
-    sed -i 's|^;*\(chdir\) *=.*|\1 = /var/www|' $file && \
+    sed -i 's|^;*\(chdir\) *=.*|\1 = /srv/www|' $file && \
     sed -i 's|^;*\(/clear_env *=.*\)|\1|' $file && \
     sed -i 's|^;*\(listen\) *=.*|\1 = [::]:9000|' $file && \
     unset file && \
     for i in /etc/php/7.0/*/php.ini; do \
-        sed -i 's|^;*\(doc_root\) *=.*|\1 = "/var/www"|' $i; \
+        sed -i 's|^;*\(doc_root\) *=.*|\1 = "/srv/www"|' $i; \
         sed -i '/php_errors\.log/s|^;*\(error_log\) *=.*|\1 = /tmp/log|' $i; \
         sed -i 's|^;*\(expose_php\) *=.*|\1 = On|' $i; \
         sed -i 's|^;*\(max_execution_time\) *=.*|\1 = 3600|' $i; \
@@ -54,7 +54,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     rm -rf /var/lib/apt/lists/* /tmp/*
 COPY owncloud.sh /usr/bin/
 
-VOLUME ["/var/www/owncloud"]
+VOLUME ["/srv/www/owncloud"]
 
 EXPOSE 9000
 

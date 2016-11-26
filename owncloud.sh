@@ -22,7 +22,7 @@ set -o nounset                              # Treat unset variables as an error
 # Arguments:
 #   proxy) for example web
 # Return: properly configured trusted_proxies
-proxy() { local proxy="${1:-""}" file=/var/www/owncloud/config/config.php
+proxy() { local proxy="${1:-""}" file=/srv/www/owncloud/config/config.php
     [[ -e $file ]] || sleep 20
     grep -q trusted_proxies $file ||
         sed -i "/^);/i\  'trusted_proxies' => ['$proxy']," $file
@@ -84,17 +84,17 @@ shift $(( OPTIND - 1 ))
 [[ "${USERID:-""}" =~ ^[0-9]+$ ]] && usermod -u $USERID -o www-data
 [[ "${GROUPID:-""}" =~ ^[0-9]+$ ]] && groupmod -g $GROUPID -o www-data
 
-[[ -f /var/www/owncloud/config/config.php ]] && {
-    grep -q APCu /var/www/owncloud/config/config.php ||
+[[ -f /srv/www/owncloud/config/config.php ]] && {
+    grep -q APCu /srv/www/owncloud/config/config.php ||
         sed -i '/^);/i\  '"'memcache.local' => '\\\\OC\\\\Memcache\\\\APCu'," \
-                    /var/www/owncloud/config/config.php
+                    /srv/www/owncloud/config/config.php
 }
-tar -xf /owncloud-*.tar.bz2 -C /var/www owncloud
-mkdir -p /run/php /var/www/owncloud/data
-find /var/www/owncloud -print0 | xargs -0 chmod a-s,u=rwX,g=rX,o-rwx
-chown -Rh root:www-data /run/php /var/www/owncloud
-chown -Rh www-data. /var/www/owncloud/*/
-find /var/www/owncloud -name .htaccess -exec chown -Rh root:www-data {} \;
+tar -xf /owncloud-*.tar.bz2 -C /srv/www owncloud
+mkdir -p /run/php /srv/www/owncloud/data
+find /srv/www/owncloud -print0 | xargs -0 chmod a-s,u=rwX,g=rX,o-rwx
+chown -Rh root:www-data /run/php /srv/www/owncloud
+chown -Rh www-data. /srv/www/owncloud/*/
+find /srv/www/owncloud -name .htaccess -exec chown -Rh root:www-data {} \;
 
 if [[ $# -ge 1 && -x $(which $1 2>&-) ]]; then
     exec "$@"
