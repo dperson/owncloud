@@ -90,11 +90,10 @@ shift $(( OPTIND - 1 ))
                     /var/www/owncloud/config/config.php
 }
 tar -xf /owncloud-*.tar.bz2 -C /var/www owncloud
-mkdir -p /run/lighttpd /var/www/owncloud/data
-[[ -p /tmp/log ]] || mkfifo -m 0660 /tmp/log
+mkdir -p /var/www/owncloud/data
 find /var/www/owncloud -print0 | xargs -0 chmod a-s,u=rwX,g=rX,o-rwx
-chown -Rh root:www-data /var/www/owncloud /tmp/log
-chown -Rh www-data. /run/lighttpd /var/cache/lighttpd /var/www/owncloud/*/
+chown -Rh root:www-data /var/www/owncloud
+chown -Rh www-data. /var/www/owncloud/*/
 find /var/www/owncloud -name .htaccess -exec chown -Rh root:www-data {} \;
 
 if [[ $# -ge 1 && -x $(which $1 2>&-) ]]; then
@@ -102,9 +101,8 @@ if [[ $# -ge 1 && -x $(which $1 2>&-) ]]; then
 elif [[ $# -ge 1 ]]; then
     echo "ERROR: command not found: $1"
     exit 13
-elif ps -ef | egrep -v grep | grep -q lighttpd; then
+elif ps -ef | egrep -v grep | grep -q php-fpm7.0; then
     echo "Service already running, please restart container to apply changes"
 else
-    tail -F /tmp/log &
-    exec lighttpd -D -f /etc/lighttpd/lighttpd.conf
+    exec php-fpm7.0
 fi
