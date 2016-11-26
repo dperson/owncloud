@@ -90,7 +90,7 @@ shift $(( OPTIND - 1 ))
                     /srv/www/owncloud/config/config.php
 }
 tar -xf /owncloud-*.tar.bz2 -C /srv/www owncloud
-diff -q /nginx.conf /srv/www/owncloud/config/nginx.conf &&
+diff -q /nginx.conf /srv/www/owncloud/config/nginx.conf >/dev/null 2>&1 ||
     cp -p /nginx.conf /srv/www/owncloud/config/nginx.conf
 mkdir -p /run/php /srv/www/owncloud/data
 find /srv/www/owncloud -print0 | xargs -0 chmod a-s,u=rwX,g=rX,o=rX
