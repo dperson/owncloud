@@ -7,8 +7,8 @@ MAINTAINER David Personette <dperson@gmail.com>
     #curl -Ls https://www.dotdeb.org/dotdeb.gpg | apt-key add - && \
 RUN export DEBIAN_FRONTEND='noninteractive' && \
     export url='https://download.owncloud.org/community' && \
-    export version='9.1.2' && \
-    export sha256sum='108bd46864aac95c90c246a2eda35b00513c14df132177add079' && \
+    export version='9.1.3' && \
+    export sha256sum='e0a1eb35fffb61dab5ca41f6d3fdb4ddcc3ec09683cd620b8094' && \
     apt-get update -qq && \
     apt-get install -qqy --no-install-recommends bzip2 ca-certificates curl \
                 openssl smbclient php7.0-bz2 php7.0-curl php7.0-fpm php7.0-gd \
