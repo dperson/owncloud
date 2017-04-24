@@ -17,10 +17,12 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
                 php7.0-pgsql php7.0-sqlite3 php7.0-xml php7.0-zip php-apcu-bc \
                 php-imagick php-memcached php-redis procps \
                 $(apt-get -s dist-upgrade|awk '/^Inst.*ecurity/ {print $2}') &&\
-    echo "downloading owncloud-${version}.tar.bz2 ..." && \
+    file="owncloud-${version}.tar.bz2" && \
+    echo "downloading $file ..." && \
     curl -LOSs https://github.com/dperson/owncloud/raw/master/nginx.conf && \
-    curl -LOSs ${url}/owncloud-${version}.tar.bz2 && \
-    sha256sum owncloud-${version}.tar.bz2 | grep -q "$sha256sum" && \
+    curl -LOSs ${url}/$file && \
+    sha256sum $file | grep -q "$sha256sum" || \
+    { echo "expected $sha1sum, got $(sha1sum $file)"; exit; } && \
     file=/etc/php/7.0/fpm/php-fpm.conf && \
     sed -i 's|^;*\(daemonize\) *=.*|\1 = no|' $file && \
     sed -i 's|^;*\(error_log\) *=.*|\1 = /proc/self/fd/2|' $file && \
@@ -53,7 +55,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     apt-get autoremove -qqy && apt-get clean && \
     ln -s /srv/www /var/ && \
     mkdir -p /run/php && \
-    rm -rf /var/lib/apt/lists/* /tmp/*
+    rm -rf /var/lib/apt/lists/* /tmp/* $file
 COPY owncloud.sh /usr/bin/
 
 VOLUME ["/srv/www/owncloud"]
