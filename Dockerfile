@@ -22,7 +22,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     curl -LOSs https://github.com/dperson/owncloud/raw/master/nginx.conf && \
     curl -LOSs ${url}/$file && \
     sha256sum $file | grep -q "$sha256sum" || \
-    { echo "expected $sha1sum, got $(sha1sum $file)"; exit; } && \
+    { echo "expected $sha256sum, got $(sha256sum $file)"; exit 13; } && \
     file=/etc/php/7.0/fpm/php-fpm.conf && \
     sed -i 's|^;*\(daemonize\) *=.*|\1 = no|' $file && \
     sed -i 's|^;*\(error_log\) *=.*|\1 = /proc/self/fd/2|' $file && \
