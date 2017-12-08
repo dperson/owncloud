@@ -1,14 +1,10 @@
 FROM debian:stretch
 MAINTAINER David Personette <dperson@gmail.com>
 
-# Install php and ownCloud
-    #echo "deb http://packages.dotdeb.org stretch all" \
-    #            >>/etc/apt/sources.list.d/dotdeb.list && \
-    #curl -LSs https://www.dotdeb.org/dotdeb.gpg | apt-key add - && \
 RUN export DEBIAN_FRONTEND='noninteractive' && \
     export url='https://download.owncloud.org/community' && \
-    export version='10.0.3' && \
-    export sha256sum='f489e072090d51e47b390109297d7aaee56dd39c42d8d149fb0b' && \
+    export version='10.0.4' && \
+    export sha256sum='e150f0b413376b0da5225dcdc372938c49ca702cab3759e59db2' && \
     apt-get update -qq && \
     apt-get install -qqy --no-install-recommends bzip2 ca-certificates curl \
                 openssl smbclient php7.0-bz2 php7.0-curl php7.0-fpm php7.0-gd \
