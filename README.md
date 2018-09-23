@@ -52,7 +52,7 @@ AND/OR set local storage:
 
     The 'command' (if provided and valid) will be run instead of owncloud
 
-ENVIRONMENT VARIABLES (only available with `docker run`)
+ENVIRONMENT VARIABLES
 
  * `PROXY` - As above, configure the proxy, IE `172.17.0.11`
  * `TZ` - As above, configure the zoneinfo timezone, IE `EST5EDT`
