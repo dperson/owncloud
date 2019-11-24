@@ -3,8 +3,8 @@ MAINTAINER David Personette <dperson@gmail.com>
 
 RUN export DEBIAN_FRONTEND='noninteractive' && \
     export url='https://download.owncloud.org/community' && \
-    export version='10.3.0' && \
-    export sha256sum='3fc96799af93e10f1228970371668c83d8c07a3fdca67369105e' && \
+    export version='10.3.1' && \
+    export sha256sum='649b0bf34b21c7f1c3b3f19677df654dc6d20086bae910dc6c0e' && \
     apt-get update -qq && \
     apt-get install -qqy --no-install-recommends bzip2 ca-certificates curl \
                 openssl smbclient php7.0-bz2 php7.0-curl php7.0-fpm php7.0-gd \
